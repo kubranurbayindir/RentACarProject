@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +74,7 @@ public class ImageManager implements ImageService {
 	}
 
 	@Override
-	public Result Update(UpdateImageRequest updateImageRequest) throws IOException {
+	public Result Update(@NotNull UpdateImageRequest updateImageRequest) throws IOException {
 		Image image = this.imageDao.getById(updateImageRequest.getImageId());
 
 		var result = BusinnessRules.run(checkCarImagesCount(image.getCar().getCarId(), 5),

@@ -65,7 +65,7 @@ public class InvoicesController {
 	}
 
 	@GetMapping("getInvoiceByDate")
-	public DataResult<List<InvoiceSearchListDto>> getCarByColor(@RequestParam("minDate") Date minDate,
+	public DataResult<List<InvoiceSearchListDto>> getInvoiceByDate(@RequestParam("minDate") Date minDate,
 			@RequestParam("maxDate") Date maxDate) throws ParseException {
 
 		CreateInvoiceDateRequest createInvoiceDateRequest = new CreateInvoiceDateRequest();

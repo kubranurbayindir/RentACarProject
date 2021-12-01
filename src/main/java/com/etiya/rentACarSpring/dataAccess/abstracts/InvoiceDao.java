@@ -14,7 +14,7 @@ import com.etiya.rentACarSpring.entities.complexTypes.CarDetailForColorAndBrand;
 public interface InvoiceDao extends JpaRepository<Invoice, Integer> {
 
 	@Query(value = "Select * From invoices WHERE create_date between :minDate and :maxDate ", nativeQuery = true)
-	List<Invoice> getByCreationDateBetween(@Param("minDate")Date startDate,@Param("maxDate")Date endDate);
+	List<Invoice> getByCreationDateBetween(@Param("minDate")Date minDate,@Param("maxDate")Date maxDate);
 	
 
 	List<Invoice> getInvoiceByUser_UserId(int userId);
