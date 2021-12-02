@@ -1,10 +1,10 @@
-package com.etiya.rentACarSpring.fakeServices;
+package com.etiya.rentACarSpring.core.utilities.adapter.fakeServices;
 
 import java.util.Random;
 
 public class findexService {
 
-	public Integer getIndividualCustomerScore() {
+	public Integer getIndividualCustomerScore(String identityNumber) {
 		return 1000;
 	}
 	

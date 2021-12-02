@@ -9,5 +9,6 @@ import com.etiya.rentACarSpring.entities.Rental;
 
 public interface CorparateCustomerDao  extends JpaRepository<CorparateCustomer, Integer> {
 
+    boolean existsByTaxNumber(String taxNumber);
 	
 }

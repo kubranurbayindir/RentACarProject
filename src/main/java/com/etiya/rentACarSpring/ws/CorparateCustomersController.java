@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.etiya.rentACarSpring.businnes.abstracts.CorparateCustomerService;
-import com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest.CreateCorparateRequest;
-import com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest.DeleteCorparateRequest;
-import com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest.UpdateCorparateRequest;
+import com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest.CorparateCustomerRequest.CreateCorparateRequest;
+import com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest.CorparateCustomerRequest.DeleteCorparateRequest;
+import com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest.CorparateCustomerRequest.UpdateCorparateRequest;
 import com.etiya.rentACarSpring.core.utilities.results.Result;
 
 @RestController

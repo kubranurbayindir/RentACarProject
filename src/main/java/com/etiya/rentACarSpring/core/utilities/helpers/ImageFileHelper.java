@@ -47,8 +47,8 @@ public class ImageFileHelper implements FileHelper {
 		}
 
 		String CarFolderName = imagePath.substring(0, imagePath.indexOf("\\"));
-		this.deleteImage(CarFolderName);
-		
+		this.deleteImage(imagePath);
+
 		String newImageName = this.createImageName(file).getMessage();
 		File myFile = new File(FilePath.imagePath+CarFolderName + "\\" + newImageName);
 		myFile.createNewFile();

@@ -15,7 +15,6 @@ import com.etiya.rentACarSpring.core.utilities.results.Result;
 import com.etiya.rentACarSpring.core.utilities.results.SuccesResult;
 import com.etiya.rentACarSpring.dataAccess.abstracts.BrandDao;
 import com.etiya.rentACarSpring.entities.Brand;
-import com.etiya.rentACarSpring.entities.Car;
 
 @Service
 public class BrandManager implements BrandService {
@@ -44,6 +43,11 @@ public class BrandManager implements BrandService {
 
 	@Override
 	public Result update(UpdateBrandRequest updateBrandRequest) {
+		Result result = BusinnessRules.run(checkBrandNameDublicated(updateBrandRequest.getBrandName()));
+		if (result != null) {
+			return result;
+		}
+
 		Brand brand = modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
 		this.brandDao.save(brand);
 		return new SuccesResult(Messages.updatedBrand);
@@ -59,7 +63,7 @@ public class BrandManager implements BrandService {
 	private Result checkBrandNameDublicated(String brandName) {
 		Brand brand=this.brandDao.getByBrandName(brandName);
 		if (brand!=null) {
-			return new ErrorResult(Messages.checkBrandNameDublicated);
+			return new ErrorResult("Marka Adı tekrar edemez");
 		}
 		
 		return new SuccesResult();

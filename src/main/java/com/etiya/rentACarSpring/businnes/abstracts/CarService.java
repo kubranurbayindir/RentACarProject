@@ -36,4 +36,6 @@ public interface CarService {
 	DataResult<List<CarSearchListDto>> getWithoutMaintenanceOfCar();
 
 	DataResult<List<CarSearchListDto>> getCarByCityId(Integer cityId);
+
+	Result checkCarExistsInGallery(int id);
 }

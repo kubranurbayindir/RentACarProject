@@ -35,6 +35,9 @@ public class IndividualCustomer extends User {
 	
 	@Column (name="last_name")
 	private String lastName;
+
+	@Column (name="identity_number")
+	private String identityNumber;
 	
 	@Column (name="birthday")
 	private Date birthday;  

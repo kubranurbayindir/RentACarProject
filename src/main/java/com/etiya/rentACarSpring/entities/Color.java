@@ -23,7 +23,7 @@ public class Color {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "color_id")
+	@Column(name = "colorId")
 	private int colorId;
 	
 	@Column(name = "color_name")

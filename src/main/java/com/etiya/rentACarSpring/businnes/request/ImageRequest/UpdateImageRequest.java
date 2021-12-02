@@ -1,6 +1,5 @@
 package com.etiya.rentACarSpring.businnes.request.ImageRequest;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -11,9 +10,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +19,7 @@ public class UpdateImageRequest {
 	
 	@NotNull
 	private int carId;
-
+	
 	@NotNull
 	@NotBlank
 	@JsonIgnore

@@ -1,9 +1,13 @@
 package com.etiya.rentACarSpring.businnes.concretes;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.etiya.rentACarSpring.businnes.request.RentalRequest.UpdateRentalRequest;
+import com.etiya.rentACarSpring.businnes.dtos.CreditCardSearchListDto;
+import com.etiya.rentACarSpring.businnes.request.PosServiceRequest;
+import com.etiya.rentACarSpring.core.utilities.adapter.posServiceAdapter.posSystemService;
+import com.etiya.rentACarSpring.entities.CreditCard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -40,11 +44,12 @@ public class RentalManager implements RentalService {
 	private CreditCardService creditcardService;
 	private InvoiceService invoiceService;
 	private CarMaintenanceService carMaintenanceService;
+	private posSystemService posSystemService;
 
 	@Autowired
 	public RentalManager(RentalDao rentalDao, ModelMapperService modelMapperService, CarService carService,
 			UserService userService, CreditCardService creditcardService,@Lazy InvoiceService invoiceService,
-			@Lazy CarMaintenanceService carMaintenanceService) {
+			@Lazy CarMaintenanceService carMaintenanceService,posSystemService posSystemService) {
 
 		super();
 		this.rentalDao = rentalDao;
@@ -54,6 +59,7 @@ public class RentalManager implements RentalService {
 		this.creditcardService = creditcardService;
 		this.invoiceService = invoiceService;
 		this.carMaintenanceService = carMaintenanceService;
+		this.posSystemService=posSystemService;
 
 	}
 
@@ -71,7 +77,9 @@ public class RentalManager implements RentalService {
 	public Result Add(CreateRentalRequest createRentalRequest) {
 		Result result = BusinnessRules.run(checkCarRentalStatus(createRentalRequest.getCarId()),
 				checkUserAndCarFindexScore(createRentalRequest.getUserId(), createRentalRequest.getCarId()),
-				carMaintenanceService.CheckIfCarIsAtMaintenance(createRentalRequest.getCarId()));
+				carMaintenanceService.CheckIfCarIsAtMaintenance(createRentalRequest.getCarId()),
+				checkIfCarIsNotExistsInGallery(createRentalRequest.getCarId()),
+				checkIfUserRegisteredSystem(createRentalRequest.getUserId()));
 
 		if (result != null) {
 			return result;
@@ -86,6 +94,7 @@ public class RentalManager implements RentalService {
 
 	@Override
 	public Result dropOffCarUpdate(DropOffCarUpdateRequest dropOffCarUpdateRequest) {
+
 		Rental rental = modelMapperService.forRequest().map(dropOffCarUpdateRequest, Rental.class);
 
 		Car car = this.carService.getbyId(dropOffCarUpdateRequest.getCarId()).getData();
@@ -103,10 +112,7 @@ public class RentalManager implements RentalService {
 
 
 			this.invoiceService.Add(dropOffCarUpdateRequest);
-			return new SuccesResult("Rental log is added and renting bill is created.");
-
-
-
+			return new SuccesResult("Araç kiradan döndü ve fatura oluşturuldu.");
 	}
 
 
@@ -146,5 +152,35 @@ public class RentalManager implements RentalService {
 
 		return new SuccesResult();
 	}
+
+
+	private Result checkCreditCardBalance(CreditCardSearchListDto creditCardSearchListDto, double price){
+
+		PosServiceRequest fakePosServiceRequest = new PosServiceRequest();
+		fakePosServiceRequest.setCardNumber(creditCardSearchListDto.getCardNumber());
+		fakePosServiceRequest.setPrice(price);
+		if (this.posSystemService.withdraw(fakePosServiceRequest)){
+			return  new ErrorResult("Limit Yeterli Değil");
+		}
+
+
+		return new SuccesResult();
+	}
+
+	private Result checkIfCarIsNotExistsInGallery(int carId) {
+		if (!this.carService.checkCarExistsInGallery(carId).isSuccess()) {
+			return new ErrorResult("Böyle bir araba galeride bulunmamaktadır.");
+		}
+		return new SuccesResult();
+	}
+
+	private Result checkIfUserRegisteredSystem(int userId) {
+		if (!this.userService.getById(userId).isSuccess()) {
+			return new ErrorResult("Böyle bir kullanıcı sisteme kayıtlı değil, öncelikle kayıt olunuz.");
+		}
+		return new SuccesResult();
+	}
+
+
 
 }

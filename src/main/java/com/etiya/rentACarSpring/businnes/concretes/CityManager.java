@@ -1,5 +1,8 @@
 package com.etiya.rentACarSpring.businnes.concretes;
 
+import com.etiya.rentACarSpring.core.utilities.businnessRules.BusinnessRules;
+import com.etiya.rentACarSpring.core.utilities.results.*;
+import com.etiya.rentACarSpring.entities.Brand;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -10,8 +13,6 @@ import com.etiya.rentACarSpring.businnes.request.CityRequest.CreateCityRequest;
 import com.etiya.rentACarSpring.businnes.request.CityRequest.DeleteCityRequest;
 import com.etiya.rentACarSpring.businnes.request.CityRequest.UpdateCityRequest;
 import com.etiya.rentACarSpring.core.utilities.mapping.ModelMapperService;
-import com.etiya.rentACarSpring.core.utilities.results.Result;
-import com.etiya.rentACarSpring.core.utilities.results.SuccesResult;
 import com.etiya.rentACarSpring.dataAccess.abstracts.CityDao;
 import com.etiya.rentACarSpring.entities.City;
 
@@ -29,6 +30,10 @@ public class CityManager implements CityService {
 
 	@Override
 	public Result save(CreateCityRequest createCityRequest) {
+		Result result = BusinnessRules.run(checkCityNameDublicated(createCityRequest.getCityName()));
+		if (result != null) {
+			return result;
+		}
 		City city = modelMapperService.forRequest().map(createCityRequest, City.class);
 		this.cityDao.save(city);
 		return new SuccesResult(Messages.addedCity);
@@ -36,6 +41,10 @@ public class CityManager implements CityService {
 
 	@Override
 	public Result update(UpdateCityRequest updateCityRequest) {
+		Result result = BusinnessRules.run(checkCityNameDublicated(updateCityRequest.getCityName()));
+		if (result != null) {
+			return result;
+		}
 		City city  = modelMapperService.forRequest().map(updateCityRequest, City.class);
 		this.cityDao.save(city);
 		return new SuccesResult(Messages.updatedCity);
@@ -43,8 +52,22 @@ public class CityManager implements CityService {
 
 	@Override
 	public Result delete(DeleteCityRequest deleteCityRequest) {
+
 		this.cityDao.deleteById(deleteCityRequest.getCityId());
 		return new SuccesResult(Messages.deletedCity);
 	}
 
+	@Override
+	public DataResult<City> getbyId(int cityId) {
+		return new SuccesDataResult<City>(this.cityDao.getById(cityId));
+	}
+
+	private Result checkCityNameDublicated(String cityName) {
+		City city=this.cityDao.getByCityName(cityName);
+		if (city!=null) {
+			return new ErrorResult("Şehir kayıtlı.");
+		}
+
+		return new SuccesResult();
+	}
 }

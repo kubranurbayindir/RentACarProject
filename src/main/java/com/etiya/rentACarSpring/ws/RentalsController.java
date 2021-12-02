@@ -43,7 +43,7 @@ public class RentalsController {
 		return this.rentalService.Add(createRentalRequest);
 	}
 	
-	@PutMapping("update")
+	@PutMapping("returnTheCar")
 	public Result update(@RequestBody @Valid DropOffCarUpdateRequest dropOffCarUpdateRequest) {
 		return this.rentalService.dropOffCarUpdate(dropOffCarUpdateRequest);
 	}
@@ -52,9 +52,5 @@ public class RentalsController {
 	public Result delete(@RequestBody @Valid DeleteRentaRequest deleteRentalRequest) {
 		return this.rentalService.Delete(deleteRentalRequest);
 	}
-	
-//	@GetMapping("getRentalsByCarId")
-//	public DataResult<List<RentalSearchListDto>> getByRental(@RequestParam("carId") Integer carId) {
-//		return rentalService.ge;
-//	}
+
 }

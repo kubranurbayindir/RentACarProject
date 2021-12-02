@@ -13,9 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class CarSearchListDto {
-
+	@JsonProperty(value = "id")
 	private int carId;
+	 @JsonProperty(value = "daily_price")
 	private int dailyPrice;
+	 @JsonProperty(value = "description")
 	private String description;
 
 	//private int findexScore;

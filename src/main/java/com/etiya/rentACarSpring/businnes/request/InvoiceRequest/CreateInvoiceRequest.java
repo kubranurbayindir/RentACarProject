@@ -24,7 +24,7 @@ public class CreateInvoiceRequest {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date createDate;
 	@NotNull
-	private Double totalPrice;
+	private int totalPrice;
 	@NotNull
 	@Min(1)
 	private int totalRentDay;

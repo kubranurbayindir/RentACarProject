@@ -3,6 +3,7 @@ package com.etiya.rentACarSpring.businnes.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.etiya.rentACarSpring.core.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +13,8 @@ import com.etiya.rentACarSpring.businnes.dtos.CarSearchListDto;
 import com.etiya.rentACarSpring.businnes.request.CarRequest.CreateCarRequest;
 import com.etiya.rentACarSpring.businnes.request.CarRequest.DeleteCarRequest;
 import com.etiya.rentACarSpring.businnes.request.CarRequest.UpdateCarRequest;
-import com.etiya.rentACarSpring.core.utilities.adapter.findexScoreService;
+import com.etiya.rentACarSpring.core.utilities.adapter.findexScoreServiceAdapter.findexScoreService;
 import com.etiya.rentACarSpring.core.utilities.mapping.ModelMapperService;
-import com.etiya.rentACarSpring.core.utilities.results.DataResult;
-import com.etiya.rentACarSpring.core.utilities.results.Result;
-import com.etiya.rentACarSpring.core.utilities.results.SuccesDataResult;
-import com.etiya.rentACarSpring.core.utilities.results.SuccesResult;
 import com.etiya.rentACarSpring.dataAccess.abstracts.CarDao;
 import com.etiya.rentACarSpring.entities.Car;
 import com.etiya.rentACarSpring.entities.complexTypes.CarDetail;
@@ -35,7 +32,7 @@ public class CarManager implements CarService {
 		super();
 		this.carDao = carDao;
 		this.modelMapperService = modelMapperService;
-		this.findexScoreService = findexScoreService;
+		this.findexScoreService=findexScoreService;
 	}
 
 	@Override
@@ -58,8 +55,6 @@ public class CarManager implements CarService {
 	@Override
 	public Result Update(UpdateCarRequest updateCarRequest) {
 		Car car = modelMapperService.forRequest().map(updateCarRequest, Car.class);
-
-		car.setFindexScore(findexScoreService.sendCarFindexScore());
 		this.carDao.save(car);
 		return new SuccesResult(Messages.updatedCar);
 	}
@@ -137,4 +132,11 @@ public class CarManager implements CarService {
 		return new SuccesDataResult<List<CarSearchListDto>>(response);
 	}
 
+	@Override
+	public Result checkCarExistsInGallery(int id) {
+		if (this.carDao.existsById(id)) {
+			return new SuccesResult();
+		}
+		return new ErrorResult("Galeride böyle bir araba yok.");
+	}
 }

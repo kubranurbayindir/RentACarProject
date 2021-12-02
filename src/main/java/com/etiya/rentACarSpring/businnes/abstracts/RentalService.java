@@ -7,7 +7,6 @@ import com.etiya.rentACarSpring.businnes.dtos.RentalSearchListDto;
 import com.etiya.rentACarSpring.businnes.request.RentalRequest.CreateRentalRequest;
 import com.etiya.rentACarSpring.businnes.request.RentalRequest.DeleteRentaRequest;
 import com.etiya.rentACarSpring.businnes.request.RentalRequest.DropOffCarUpdateRequest;
-import com.etiya.rentACarSpring.businnes.request.RentalRequest.UpdateRentalRequest;
 import com.etiya.rentACarSpring.core.utilities.results.DataResult;
 import com.etiya.rentACarSpring.core.utilities.results.Result;
 import com.etiya.rentACarSpring.entities.Rental;

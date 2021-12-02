@@ -1,4 +1,4 @@
-package com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest;
+package com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest.CorparateCustomerRequest;
 
 
 import javax.validation.constraints.NotNull;

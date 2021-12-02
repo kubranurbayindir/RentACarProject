@@ -9,7 +9,6 @@ import com.etiya.rentACarSpring.businnes.request.ImageRequest.DeleteImageRequest
 import com.etiya.rentACarSpring.businnes.request.ImageRequest.UpdateImageRequest;
 import com.etiya.rentACarSpring.core.utilities.results.DataResult;
 import com.etiya.rentACarSpring.core.utilities.results.Result;
-import com.etiya.rentACarSpring.entities.Image;
 
 public interface ImageService {
 	DataResult<List<ImageSearchListDto>> getAll();	

@@ -1,4 +1,4 @@
-package com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest;
+package com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest.CorparateCustomerRequest;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -24,7 +24,10 @@ public class CreateCorparateRequest {
 	@Email
 	private String email;
 	@NotNull
-	private String password; 
+	private String password;
+	@NotNull
+	@JsonIgnore
+	private int findexScore;
 
 
 }

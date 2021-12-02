@@ -37,7 +37,7 @@ public class Invoice {
 	private Date createDate;
 
 	@Column(name = "total_price")
-	private Double totalPrice;
+	private int totalPrice;
 
 	@Column(name = "total_rent_day")
 	private int totalRentDay;

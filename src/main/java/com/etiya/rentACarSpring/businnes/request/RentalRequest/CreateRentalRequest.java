@@ -34,9 +34,11 @@ public class CreateRentalRequest {
 	@NotNull
 	private int carId;
 
+	private int returnKilometer;
+
 	private int takeCityId;
 
-	private int returnKilometer;
+	private int returnCityId;
 
 	
 }

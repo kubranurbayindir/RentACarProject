@@ -4,6 +4,7 @@ import java.sql.Date;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -30,6 +31,9 @@ public class IndividualRegisterRequest {
 	private String firstName;
 	@NotNull
 	private String lastName;
+	@NotNull
+	@Size(min=11,max=11)
+	private String identityNumber;
 	@NotNull
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date birthday;

@@ -12,16 +12,15 @@ import com.etiya.rentACarSpring.businnes.constants.Messages;
 import com.etiya.rentACarSpring.businnes.request.AuthRequest.CorparateRegisterRequest;
 import com.etiya.rentACarSpring.businnes.request.AuthRequest.IndividualRegisterRequest;
 import com.etiya.rentACarSpring.businnes.request.AuthRequest.LoginRequest;
-import com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest.CreateCorparateRequest;
+import com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest.CorparateCustomerRequest.CreateCorparateRequest;
 import com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest.CreateIndividualCustomerRequest;
-import com.etiya.rentACarSpring.businnes.request.UserRequest.CreateUserRequest;
 
 import com.etiya.rentACarSpring.core.utilities.businnessRules.BusinnessRules;
 import com.etiya.rentACarSpring.core.utilities.mapping.ModelMapperService;
 import com.etiya.rentACarSpring.core.utilities.results.ErrorResult;
 import com.etiya.rentACarSpring.core.utilities.results.Result;
 import com.etiya.rentACarSpring.core.utilities.results.SuccesResult;
-import com.etiya.rentACarSpring.core.utilities.adapter.findexScoreService;
+import com.etiya.rentACarSpring.core.utilities.adapter.findexScoreServiceAdapter.findexScoreService;
 
 @Service
 public class AuthManager implements AuthService {
@@ -48,11 +47,16 @@ public class AuthManager implements AuthService {
 	@Override
 	public Result individualRegister(IndividualRegisterRequest individualRegisterRequest) {
 
+		var result = BusinnessRules.run(checkIfUserAlreadyExists(individualRegisterRequest.getEmail()));
+
+		if (result != null) {
+			return result;
+		}
+
 		CreateIndividualCustomerRequest crateCreateIndividualCustomerRequest = modelMapperService.forRequest()
 				.map(individualRegisterRequest, CreateIndividualCustomerRequest.class);
 
-		crateCreateIndividualCustomerRequest.setFindexScore(findexScoreService.sendUserFindexScore());
-
+		crateCreateIndividualCustomerRequest.setFindexScore(findexScoreService.getIndividualFindexScore(individualRegisterRequest.getIdentityNumber()));
 		this.individualCustomerService.Save(crateCreateIndividualCustomerRequest);
 
 		return new SuccesResult(Messages.individualRegister);
@@ -61,9 +65,15 @@ public class AuthManager implements AuthService {
 	@Override
 	public Result corparateRegister(CorparateRegisterRequest corparateRegisterRequest) {
 
+		var result = BusinnessRules.run(checkIfUserAlreadyExists(corparateRegisterRequest.getEmail()));
+
+		if (result != null) {
+			return result;
+		}
+
 		CreateCorparateRequest createCorparateRequest = modelMapperService.forRequest().map(corparateRegisterRequest,
 				CreateCorparateRequest.class);
-		corparateRegisterRequest.setFindexScore(findexScoreService.getCorparateFindexScore(corparateRegisterRequest.getTaxNumber()));
+		createCorparateRequest.setFindexScore(findexScoreService.getCorparateFindexScore(corparateRegisterRequest.getTaxNumber()));
 		this.corparateCustomerService.Add(createCorparateRequest);
 		return new SuccesResult(Messages.corparateRegister);
 	}
@@ -95,6 +105,13 @@ public class AuthManager implements AuthService {
 					.equals(loginRequest.getPassword())) {
 				return new ErrorResult("Hatalı Şifre Girdiniz!");
 			}
+		}
+		return new SuccesResult();
+	}
+
+	private Result checkIfUserAlreadyExists(String email) {
+		if(this.userService.getByEmail(email).isSuccess()) {
+			return new ErrorResult("Bu maile sahip kullanıcı bulunmaktadır.");
 		}
 		return new SuccesResult();
 	}

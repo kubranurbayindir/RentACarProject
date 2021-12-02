@@ -1,14 +1,9 @@
 package com.etiya.rentACarSpring.ws;
 
-import java.util.ArrayList;
-
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +15,6 @@ import com.etiya.rentACarSpring.businnes.request.BrandRequest.CreateBrandRequest
 import com.etiya.rentACarSpring.businnes.request.BrandRequest.DeleteBrandRequest;
 import com.etiya.rentACarSpring.businnes.request.BrandRequest.UpdateBrandRequest;
 import com.etiya.rentACarSpring.core.utilities.results.Result;
-import com.etiya.rentACarSpring.entities.Brand;
 
 @RestController
 @RequestMapping("api/brands")

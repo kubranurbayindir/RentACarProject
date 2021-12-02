@@ -47,7 +47,8 @@ public class CreditCardManager implements CreditCardService {
 	@Override
 	public Result add(CreateCreditCardRequest createCreditCardRequest) {
 		Result result = BusinnessRules.run(checkIfCreditCardFormatIsTrue(createCreditCardRequest.getCardNumber()),
-				checkExistCardNumber(createCreditCardRequest.getCardNumber()));
+				checkExistCardNumber(createCreditCardRequest.getCardNumber()),
+				checkIfCreditCardCvvFormatIsTrue(createCreditCardRequest.getCvv()));
 		if (result != null) {
 			return result;
 		}
@@ -83,6 +84,20 @@ public class CreditCardManager implements CreditCardService {
 
 		return new SuccesResult();
 
+	}
+
+
+	private Result checkIfCreditCardCvvFormatIsTrue(String cvv) {
+
+		String regex = "^[0-9]{3,3}$";
+
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(cvv);
+
+		if (!matcher.matches())
+			return new ErrorResult("Credit card cvv format is not correct.");
+
+		return new SuccesResult();
 	}
 
 	private Result checkExistCardNumber(String cardNumber) {

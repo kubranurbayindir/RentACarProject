@@ -8,7 +8,6 @@ import com.etiya.rentACarSpring.businnes.request.CarMaintenanceRequest.DeleteCar
 import com.etiya.rentACarSpring.businnes.request.CarMaintenanceRequest.UpdateCarMaintenanceRequest;
 import com.etiya.rentACarSpring.core.utilities.results.DataResult;
 import com.etiya.rentACarSpring.core.utilities.results.Result;
-import com.etiya.rentACarSpring.entities.Car;
 import com.etiya.rentACarSpring.entities.CarMaintenance;
 
 public interface CarMaintenanceService {

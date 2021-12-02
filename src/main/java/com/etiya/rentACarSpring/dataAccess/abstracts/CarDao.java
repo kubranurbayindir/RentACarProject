@@ -10,8 +10,8 @@ import com.etiya.rentACarSpring.entities.Car;
 import com.etiya.rentACarSpring.entities.complexTypes.CarDetail;
 import com.etiya.rentACarSpring.entities.complexTypes.CarDetailForColorAndBrand;
 
-public interface CarDao extends JpaRepository<Car, Integer> { // car'ın Id'sinin veri tipi integer
-	List<Car> getByDailyPrice(Integer dailyPrice);
+public interface CarDao extends JpaRepository<Car, Integer> {
+
 
 	@Query("Select new com.etiya.rentACarSpring.entities.complexTypes.CarDetail"
 			+ "(c.id,b.brandName,cl.colorName,c.dailyPrice,c.description) "
@@ -38,4 +38,8 @@ public interface CarDao extends JpaRepository<Car, Integer> { // car'ın Id'sini
 	List<CarSearchListDto> getAllWithoutMaintenanceOfCar();
 
 	List<Car> getByCity_CityId(int cityId);
+
+	boolean existsById(int id);
+
+	List<Car> getByDailyPrice(Integer dailyPrice);
 }

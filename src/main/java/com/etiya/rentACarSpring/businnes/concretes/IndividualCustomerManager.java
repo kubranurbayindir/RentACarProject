@@ -19,7 +19,6 @@ import com.etiya.rentACarSpring.core.utilities.results.SuccesDataResult;
 import com.etiya.rentACarSpring.core.utilities.results.SuccesResult;
 import com.etiya.rentACarSpring.dataAccess.abstracts.IndividualCustomerDao;
 import com.etiya.rentACarSpring.entities.IndividualCustomer;
-import com.etiya.rentACarSpring.entities.User;
 
 
 @Service

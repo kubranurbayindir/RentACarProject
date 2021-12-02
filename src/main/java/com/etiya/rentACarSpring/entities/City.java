@@ -33,7 +33,6 @@ public class City {
 	@Column(name = "cityName")
 	private String cityName;
 	
-	
 	@OneToMany(mappedBy = "city")
 	private List<Car> cars;
 	

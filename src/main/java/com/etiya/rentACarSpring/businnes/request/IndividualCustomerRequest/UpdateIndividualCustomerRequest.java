@@ -1,37 +1,27 @@
 package com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.sql.Date;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class UpdateIndividualCustomerRequest {
     @NotNull
-    private int userId;
-
+    private int individualCustomersId;
     @NotNull
-    @Size(min=2,max=16)
     private String firstName;
-
     @NotNull
-    @Size(min=2,max=16)
     private String lastName;
-
-    @NotNull
-    @Email
-    private String email;
-
-    @NotNull
-    private String password;
-
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private String birthday;
+    private Date birthday;
+    @NotNull
+    @Size(min=11,max=11)
+    private String identityNumber;
+    @NotNull
+    private String email;
+    @NotNull
+    private String password;
 }
