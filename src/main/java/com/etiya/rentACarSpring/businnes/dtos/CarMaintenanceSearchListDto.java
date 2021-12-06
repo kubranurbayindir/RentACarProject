@@ -17,5 +17,5 @@ public class CarMaintenanceSearchListDto {
 
 	private Date returnDate;
 
-	private int carId;
+	private int carCarId;
 }

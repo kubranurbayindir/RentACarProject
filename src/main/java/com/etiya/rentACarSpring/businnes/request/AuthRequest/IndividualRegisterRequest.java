@@ -2,9 +2,7 @@ package com.etiya.rentACarSpring.businnes.request.AuthRequest;
 
 import java.sql.Date;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,8 +22,10 @@ public class IndividualRegisterRequest {
 	private int userId;
 	@NotNull
 	@Email
+	@NotBlank
 	private String email;
 	@NotNull
+	@NotBlank
 	private String password;
 	@NotNull
 	private String firstName;
@@ -33,6 +33,8 @@ public class IndividualRegisterRequest {
 	private String lastName;
 	@NotNull
 	@Size(min=11,max=11)
+	@Pattern(regexp="^[1-9]{1}[0-9]{9}[02468]{1}$",message="Tc numaranızı hatalı veya eksik girdiniz lütfen kontrol ediniz.")
+	@NotBlank
 	private String identityNumber;
 	@NotNull
 	@JsonFormat(pattern = "yyyy-MM-dd")

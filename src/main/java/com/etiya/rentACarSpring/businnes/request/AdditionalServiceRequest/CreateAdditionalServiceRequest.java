@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -18,6 +19,7 @@ public class CreateAdditionalServiceRequest {
     @JsonIgnore
     private int additionalServiceId;
     @NotNull
+    @NotBlank
     private String additionalServiceName;
 
     private int additionalServicePrice;

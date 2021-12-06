@@ -2,6 +2,7 @@ package com.etiya.rentACarSpring.businnes.request.CarRequest;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -19,7 +20,7 @@ public class CreateCarRequest {
 
 	@JsonIgnore
 	private int carId;
-	
+
 	@NotNull
 	private int colorId;
 	
@@ -33,6 +34,7 @@ public class CreateCarRequest {
 	@Min(100)	
 	private int dailyPrice;
 
+	@NotNull
 	private int kilometer;
 	
 	@NotNull

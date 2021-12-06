@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import org.springframework.lang.Nullable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,16 +48,9 @@ public class Rental {
 	@JoinColumn(name = "return_city_id")
 	private City returnCity;
 
+	@OneToMany(mappedBy = "rental")
+	private List<RentalAdditionalService> rentalAdditionalServices;
 
-	
-	
-	
-//	@ManyToOne(cascade = CascadeType.DETACH)
-//	@JoinColumn(name = "individualCustomers_id")
-//	private IndividualCustomer individualCustomer;
-//	
-//	@ManyToOne(cascade = CascadeType.DETACH)
-//	@JoinColumn(name = "corparate_customer_id")
-//	private CorparateCustomer corparateCustomer;
-	
+	@OneToOne(mappedBy = "rental")
+	private Invoice invoice;
 }

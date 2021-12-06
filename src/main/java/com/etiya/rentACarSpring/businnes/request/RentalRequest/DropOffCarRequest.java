@@ -2,9 +2,9 @@ package com.etiya.rentACarSpring.businnes.request.RentalRequest;
 
 import java.sql.Date;
 
+import com.etiya.rentACarSpring.businnes.request.CreditCardRentalRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DropOffCarUpdateRequest {
+public class DropOffCarRequest {
 
 	private int rentalId;
 
@@ -23,10 +23,9 @@ public class DropOffCarUpdateRequest {
 
 	private int returnKilometer;
 
-	private int carId;
+	//private int carId;
 
-	private  int userId;
-
+	private CreditCardRentalRequest creditCardRentalRequest;
 
 
 }

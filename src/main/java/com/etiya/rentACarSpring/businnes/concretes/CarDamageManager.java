@@ -11,6 +11,7 @@ import com.etiya.rentACarSpring.core.utilities.mapping.ModelMapperService;
 import com.etiya.rentACarSpring.core.utilities.results.*;
 import com.etiya.rentACarSpring.dataAccess.abstracts.CarDamageDao;
 
+import com.etiya.rentACarSpring.entities.Car;
 import com.etiya.rentACarSpring.entities.CarDamage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,13 @@ public class CarDamageManager implements CarDamageService {
     private CarDamageDao carDamageDao;
     private ModelMapperService modelMapperService;
     private CarService carService;
+
     @Autowired
-    public CarDamageManager(CarDamageDao carDamageDao, ModelMapperService modelMapperService,CarService carService) {
+    public CarDamageManager(CarDamageDao carDamageDao, ModelMapperService modelMapperService, CarService carService) {
         this.carDamageDao = carDamageDao;
         this.modelMapperService = modelMapperService;
         this.carService = carService;
+
     }
 
     @Override
@@ -42,7 +45,6 @@ public class CarDamageManager implements CarDamageService {
 
     @Override
     public Result add(CreateCarDamageRequest createCarDamageRequest) {
-
         Result result = BusinnessRules.run(checkCarExistsInGallery(createCarDamageRequest.getCarId()));
         if (result != null) {
             return result;
@@ -55,6 +57,11 @@ public class CarDamageManager implements CarDamageService {
 
     @Override
     public Result update(UpdateCarDamageRequest updateCarDamageRequest) {
+        Result result = BusinnessRules.run(checkCarExistsInGallery(updateCarDamageRequest.getCarId()));
+        if (result != null) {
+            return result;
+        }
+
         CarDamage carDamage = modelMapperService.forRequest().map(updateCarDamageRequest, CarDamage.class);
         this.carDamageDao.save(carDamage);
         return new SuccesResult("Güncellendi");
@@ -66,9 +73,9 @@ public class CarDamageManager implements CarDamageService {
         return new SuccesResult("Silindi");
     }
 
-   private Result checkCarExistsInGallery(int id) {
+    private Result checkCarExistsInGallery(int id) {
         boolean isExisting = carService.checkCarExistsInGallery(id).isSuccess();
-        if(!isExisting){
+        if (!isExisting) {
             return new SuccesResult();
         }
         return new ErrorResult("Galeride böyle bir araba yok.");

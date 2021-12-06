@@ -31,8 +31,8 @@ public class IndividualCustomersController {
 		super();
 		this.individualCustomerService = individualCustomerService;
 	}
-	
-	@GetMapping("all")
+
+	@GetMapping("getAll")
 	public DataResult<List<IndividualCustomerSearchListDto>> getAll() {
 		return individualCustomerService.getAll();
 	}

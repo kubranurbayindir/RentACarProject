@@ -1,6 +1,7 @@
 package com.etiya.rentACarSpring.businnes.request.CarRequest;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -25,6 +26,6 @@ public class UpdateCarRequest {
 	@Size(min=10,max=200)
 	@NotNull
 	private String description;
-
+	@NotNull
 	private int kilometer;
 }

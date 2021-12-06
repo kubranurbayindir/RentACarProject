@@ -2,19 +2,18 @@ package com.etiya.rentACarSpring.ws;
 
 import javax.validation.Valid;
 
+import com.etiya.rentACarSpring.businnes.dtos.CarMaintenanceSearchListDto;
+import com.etiya.rentACarSpring.core.utilities.results.DataResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.etiya.rentACarSpring.businnes.abstracts.CarMaintenanceService;
 import com.etiya.rentACarSpring.businnes.request.CarMaintenanceRequest.CreateCarMaintenanceRequest;
 import com.etiya.rentACarSpring.businnes.request.CarMaintenanceRequest.DeleteCarMaintenanceRequest;
 import com.etiya.rentACarSpring.businnes.request.CarMaintenanceRequest.UpdateCarMaintenanceRequest;
 import com.etiya.rentACarSpring.core.utilities.results.Result;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/carmaintenances")
@@ -26,6 +25,11 @@ public class CarMaintenancesController {
 	public CarMaintenancesController(CarMaintenanceService carMaintenanceService) {
 		super();
 		this.carMaintenanceService = carMaintenanceService;
+	}
+
+	@GetMapping("getAll")
+	public DataResult<List<CarMaintenanceSearchListDto>> getAll() {
+		return carMaintenanceService.getAll();
 	}
 
 	@PostMapping("add")

@@ -32,141 +32,141 @@ import com.etiya.rentACarSpring.entities.Image;
 
 @Service
 public class ImageManager implements ImageService {
-	//!!Bir servis sadece kendi daosuna enjecte edilebilir.
-	private ImageDao imageDao;
-	private FileHelper fileHelper;
-	private ModelMapperService modelMapperService;
-	private CarService carService;
 
-	@Autowired
-	public ImageManager(ImageDao imageDao, FileHelper fileHelper, ModelMapperService modelMapperService,
-						CarService carService) {
-		super();
-		this.imageDao = imageDao;
-		this.fileHelper = fileHelper;
-		this.modelMapperService = modelMapperService;
-		this.carService = carService;
-	}
+    private ImageDao imageDao;
+    private FileHelper fileHelper;
+    private ModelMapperService modelMapperService;
+    private CarService carService;
 
-	@Override
-	public Result Add(CreateImageRequest createImageRequest) throws IOException {
+    @Autowired
+    public ImageManager(ImageDao imageDao, FileHelper fileHelper, ModelMapperService modelMapperService, CarService carService) {
+        super();
+        this.imageDao = imageDao;
+        this.fileHelper = fileHelper;
+        this.modelMapperService = modelMapperService;
+        this.carService = carService;
+    }
 
-		var result = BusinnessRules.run(checkCarImagesCount(createImageRequest.getCarId(), 5),
-				this.fileHelper.checkImageType(createImageRequest.getFile()), checkIfCarIsNotExistsInGallery(createImageRequest.getCarId()));
+    @Override
+    public Result Add(CreateImageRequest createImageRequest) throws IOException {
 
-		if (result != null) {
-			return result;
-		}
+        var result = BusinnessRules.run(checkCarImagesCount(createImageRequest.getCarId(), 5),
+                this.fileHelper.checkImageType(createImageRequest.getFile()),
+                checkIfCarIsNotExistsInGallery(createImageRequest.getCarId()));
 
-		Date dateNow = new java.sql.Date(new java.util.Date().getTime()); // Anlık zamanı alıp bir değişkene atıyor.
+        if (result != null) {
+            return result;
+        }
 
-		Car car = modelMapperService.forRequest().map(createImageRequest, Car.class);
+        Date dateNow = new java.sql.Date(new java.util.Date().getTime()); // Anlık zamanı alıp bir değişkene atıyor.
 
-		Image image = new Image();
-		image.setImageUrl(
-				this.fileHelper.uploadImage(createImageRequest.getCarId(), createImageRequest.getFile()).getMessage());
+        Car car = modelMapperService.forRequest().map(createImageRequest, Car.class);
 
-		image.setDate(dateNow);
+        Image image = new Image();
+        image.setImageUrl(
+                this.fileHelper.uploadImage(createImageRequest.getCarId(), createImageRequest.getFile()).getMessage());
 
-		image.setCar(car);
+        image.setDate(dateNow);
 
-		this.imageDao.save(image);
+        image.setCar(car);
 
-		return new SuccesResult("Car Görseli Eklendi");
-	}
+        this.imageDao.save(image);
 
-	@Override
-	public Result Update(UpdateImageRequest updateImageRequest) throws IOException {
-		Image image = this.imageDao.getById(updateImageRequest.getImageId());
+        return new SuccesResult("Car Görseli Eklendi");
+    }
 
-		var result = BusinnessRules.run(checkCarImagesCount(image.getCar().getCarId(), 5),
-				this.fileHelper.checkImageType(updateImageRequest.getFile()), checkIfImageExists(updateImageRequest.getImageId()));
+    @Override
+    public Result Update(UpdateImageRequest updateImageRequest) throws IOException {
+        Image image = this.imageDao.getById(updateImageRequest.getImageId());
 
-		if (result != null) {
-			return result;
-		}
+        var result = BusinnessRules.run(checkCarImagesCount(image.getCar().getCarId(), 5),
+                this.fileHelper.checkImageType(updateImageRequest.getFile()),
+                checkIfImageExists(updateImageRequest.getImageId()));
 
-		Date dateNow = new java.sql.Date(new java.util.Date().getTime());
+        if (result != null) {
+            return result;
+        }
 
-		image.setImageUrl(this.fileHelper.updateImage(updateImageRequest.getFile(), image.getImageUrl()).getMessage());
-		image.setDate(dateNow);
+        Date dateNow = new java.sql.Date(new java.util.Date().getTime());
 
-		this.imageDao.save(image);
+        image.setImageUrl(this.fileHelper.updateImage(updateImageRequest.getFile(), image.getImageUrl()).getMessage());
+        image.setDate(dateNow);
 
-		return new SuccesResult("güncellendi");
-	}
+        this.imageDao.save(image);
 
-	@Override
-	public DataResult<List<ImageSearchListDto>> getCarImageDetailByCarId(int carId) {
-		List<Image> carImages = this.returnCarImageWithDefaultImageIfCarImageIsNull(carId).getData();
+        return new SuccesResult("güncellendi");
+    }
 
-		List<ImageSearchListDto> imageSearchListDto = carImages.stream()
-				.map(carImage -> modelMapperService.forDto().map(carImage, ImageSearchListDto.class))
-				.collect(Collectors.toList());
+    @Override
+    public DataResult<List<ImageSearchListDto>> getCarImageDetailByCarId(int carId) {
+        List<Image> carImages = this.returnCarImageWithDefaultImageIfCarImageIsNull(carId).getData();
 
-		return new SuccesDataResult<List<ImageSearchListDto>>(imageSearchListDto);
-	}
+        List<ImageSearchListDto> imageSearchListDto = carImages.stream()
+                .map(carImage -> modelMapperService.forDto().map(carImage, ImageSearchListDto.class))
+                .collect(Collectors.toList());
 
+        return new SuccesDataResult<List<ImageSearchListDto>>(imageSearchListDto);
+    }
 
-	@Override
-	public Result Delete(DeleteImageRequest deleteImageRequest) {
-		Image image = this.imageDao.getById(deleteImageRequest.getImageId());
+    private Result checkCarImagesCount(int CarId, int limit) {
+        if (this.imageDao.countByCar_CarId(CarId) >= limit) {
+            return new ErrorResult("Hata");
+        }
+        return new SuccesResult();
+    }
 
-		this.imageDao.delete(image);
+    private DataResult<List<Image>> returnCarImageWithDefaultImageIfCarImageIsNull(int carId) {
 
-		this.fileHelper.deleteImage(image.getImageUrl());
+        if (this.imageDao.existsByCar_CarId(carId)) {
+            return new ErrorDataResult<List<Image>>(this.imageDao.getByCar_CarId(carId));
+        }
 
-		return new SuccesResult("Resim Silindi");
-	}
+        List<Image> carImages = new ArrayList<Image>();
+        Image carImage = new Image();
+        carImage.setImageUrl(FilePath.imagePath + FilePath.defaultImage);
 
-	@Override
-	public DataResult<List<ImageSearchListDto>> getAll() {
+        carImages.add(carImage);
 
-		List<Image> result = this.imageDao.findAll();
-		List<ImageSearchListDto> response = result.stream()
-				.map(image -> modelMapperService.forDto().map(image, ImageSearchListDto.class))
-				.collect(Collectors.toList());
+        return new SuccesDataResult<List<Image>>(carImages, "Araba Listelendi");
 
-		return new SuccesDataResult<List<ImageSearchListDto>>(response);
+    }
 
-	}
+    @Override
+    public Result Delete(DeleteImageRequest deleteImageRequest) {
+        Image image = this.imageDao.getById(deleteImageRequest.getImageId());
 
-	private Result checkCarImagesCount(int CarId, int limit) {
-		if (this.imageDao.countByCar_CarId(CarId) >= limit) {
-			return new ErrorResult("Hata");
-		}
-		return new SuccesResult();
-	}
+        this.imageDao.delete(image);
 
-	private DataResult<List<Image>> returnCarImageWithDefaultImageIfCarImageIsNull(int carId) {
+        this.fileHelper.deleteImage(image.getImageUrl());
 
-		if (this.imageDao.existsByCar_CarId(carId)) {
-			return new ErrorDataResult<List<Image>>(this.imageDao.getByCar_CarId(carId));
-		}
+        return new SuccesResult("Resim Silindi");
+    }
 
-		List<Image> carImages = new ArrayList<Image>();
-		Image carImage = new Image();
-		carImage.setImageUrl(FilePath.imagePath + FilePath.defaultImage);
+    @Override
+    public DataResult<List<ImageSearchListDto>> getAll() {
 
-		carImages.add(carImage);
+        List<Image> result = this.imageDao.findAll();
+        List<ImageSearchListDto> response = result.stream()
+                .map(image -> modelMapperService.forDto().map(image, ImageSearchListDto.class))
+                .collect(Collectors.toList());
 
-		return new SuccesDataResult<List<Image>>(carImages, "Araba Listelendi");
+        return new SuccesDataResult<List<ImageSearchListDto>>(response);
 
-	}
+    }
 
-	private Result checkIfImageExists(int imageId) {
-		if (!this.imageDao.existsById(imageId)) {
-			return new ErrorResult("Böyle bir resim veritabanında bulunmamaktadır.");
+    private Result checkIfImageExists(int imageId) {
+        if (!this.imageDao.existsById(imageId)) {
+            return new ErrorResult("Böyle bir resim veritabanında bulunmamaktadır.");
+        }
+        return new SuccesResult();
 
-		}
-		return new SuccesResult();
+    }
 
-	}
-	private Result checkIfCarIsNotExistsInGallery(int carId) {
-		if (!this.carService.checkCarExistsInGallery(carId).isSuccess()) {
-			return new ErrorResult("Böyle bir araba galeride bulunmamaktadır.");
-		}
-		return new SuccesResult();
-	}
+    private Result checkIfCarIsNotExistsInGallery(int carId) {
+        if (!this.carService.checkCarExistsInGallery(carId).isSuccess()) {
+            return new ErrorResult("Böyle bir araba galeride bulunmamaktadır.");
+        }
+        return new SuccesResult();
+    }
 
 }

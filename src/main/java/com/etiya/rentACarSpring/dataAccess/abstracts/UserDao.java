@@ -6,7 +6,7 @@ import com.etiya.rentACarSpring.entities.User;
 
 public interface UserDao extends JpaRepository<User, Integer> {
 
-	boolean existsByEmail(String email);
+    boolean existsByEmail(String email);
 
-	User getByEmail(String eMail);
+    User getByEmail(String eMail);
 }

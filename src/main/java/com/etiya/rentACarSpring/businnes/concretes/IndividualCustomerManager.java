@@ -24,48 +24,47 @@ import com.etiya.rentACarSpring.entities.IndividualCustomer;
 @Service
 public class IndividualCustomerManager implements IndividualCustomerService {
 
-	private IndividualCustomerDao individualCustomerDao;
-	private ModelMapperService modelMapperService;
+    private IndividualCustomerDao individualCustomerDao;
+    private ModelMapperService modelMapperService;
 
-	@Autowired
-	public IndividualCustomerManager(IndividualCustomerDao individualCustomerDao,
-			ModelMapperService modelMapperService) {
-		super();
-		this.individualCustomerDao = individualCustomerDao;
-		this.modelMapperService = modelMapperService;
-	}
+    @Autowired
+    public IndividualCustomerManager(IndividualCustomerDao individualCustomerDao,
+                                     ModelMapperService modelMapperService) {
+        super();
+        this.individualCustomerDao = individualCustomerDao;
+        this.modelMapperService = modelMapperService;
+    }
 
-	@Override
-	public DataResult<List<IndividualCustomerSearchListDto>> getAll() {
-		List<IndividualCustomer> result = this.individualCustomerDao.findAll();
-		List<IndividualCustomerSearchListDto> response = result.stream()
-				.map(individualCustomer -> modelMapperService.forDto().map(individualCustomer, IndividualCustomerSearchListDto.class))
-				.collect(Collectors.toList());
+    @Override
+    public DataResult<List<IndividualCustomerSearchListDto>> getAll() {
+        List<IndividualCustomer> result = this.individualCustomerDao.findAll();
+        List<IndividualCustomerSearchListDto> response = result.stream()
+                .map(individualCustomer -> modelMapperService.forDto().map(individualCustomer, IndividualCustomerSearchListDto.class))
+                .collect(Collectors.toList());
 
-		return new SuccesDataResult<List<IndividualCustomerSearchListDto>>(response);
-	}
+        return new SuccesDataResult<List<IndividualCustomerSearchListDto>>(response);
+    }
 
-	@Override
-	public Result Save(CreateIndividualCustomerRequest createIndividualCustomerRequest) {
-		IndividualCustomer individualCustomer = modelMapperService.forRequest().map(createIndividualCustomerRequest, IndividualCustomer.class);
-		this.individualCustomerDao.save(individualCustomer);
-		return new SuccesResult("Ekleme İslemi Basarili");
-	}
+    @Override
+    public Result Save(CreateIndividualCustomerRequest createIndividualCustomerRequest) {
+        IndividualCustomer individualCustomer = modelMapperService.forRequest().map(createIndividualCustomerRequest, IndividualCustomer.class);
+        this.individualCustomerDao.save(individualCustomer);
+        return new SuccesResult("Ekleme İslemi Basarili");
+    }
 
-	@Override
-	public Result Update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
-		IndividualCustomer individualCustomer = modelMapperService.forRequest().map(updateIndividualCustomerRequest, IndividualCustomer.class);
-		
-		this.individualCustomerDao.save(individualCustomer);
-		return new SuccesResult("Guncelleme İslemi Basarili");
-	}
+    @Override
+    public Result Update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
+        IndividualCustomer individualCustomer = modelMapperService.forRequest().map(updateIndividualCustomerRequest, IndividualCustomer.class);
 
-	@Override
-	public Result Delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) {
-		this.individualCustomerDao.deleteById(deleteIndividualCustomerRequest.getIndividualCustomersId());
-		return new SuccesResult("Silme İslemi Basarili");
-	}
+        this.individualCustomerDao.save(individualCustomer);
+        return new SuccesResult("Guncelleme İslemi Basarili");
+    }
 
-	
+    @Override
+    public Result Delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) {
+        this.individualCustomerDao.deleteById(deleteIndividualCustomerRequest.getIndividualCustomersId());
+        return new SuccesResult("Silme İslemi Basarili");
+    }
+
 
 }

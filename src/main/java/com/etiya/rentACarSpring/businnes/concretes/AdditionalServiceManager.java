@@ -36,7 +36,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
     @Override
     public Result save(CreateAdditionalServiceRequest createAdditionalServiceRequest) {
-        Result result=BusinnessRules.run(checkAdditionalServiceNameDublicated(createAdditionalServiceRequest.getAdditionalServiceName()));
+        Result result = BusinnessRules.run(checkAdditionalServiceNameDublicated(createAdditionalServiceRequest.getAdditionalServiceName()));
         if (result != null) {
             return result;
         }
@@ -48,7 +48,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
     @Override
     public Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest) {
-        Result result=BusinnessRules.run(checkAdditionalServiceNameDublicated(updateAdditionalServiceRequest.getAdditionalServiceName()));
+        Result result = BusinnessRules.run(checkAdditionalServiceNameDublicated(updateAdditionalServiceRequest.getAdditionalServiceName()));
         if (result != null) {
             return result;
         }
@@ -74,8 +74,8 @@ public class AdditionalServiceManager implements AdditionalServiceService {
     }
 
     private Result checkAdditionalServiceNameDublicated(String additionalServiceName) {
-        AdditionalService additionalService=this.additionalServiceDao.getByAdditionalServiceName(additionalServiceName.toLowerCase());
-        if (additionalService!=null) {
+        AdditionalService additionalService = this.additionalServiceDao.getByAdditionalServiceName(additionalServiceName.toLowerCase());
+        if (additionalService != null) {
             return new ErrorResult("Bu isime ait baska bir hizmet bulunmaktadır.");
         }
         return new SuccesResult();

@@ -33,8 +33,8 @@ public class ImagesController {
 		super();
 		this.imageService = imageService;
 	}
-	
-	@GetMapping("all")
+
+	@GetMapping("getAll")
 	public DataResult<List<ImageSearchListDto>> getAll() {
 		return imageService.getAll();
 	}

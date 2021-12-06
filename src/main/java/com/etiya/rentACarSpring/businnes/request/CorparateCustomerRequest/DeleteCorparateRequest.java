@@ -1,4 +1,4 @@
-package com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest.CorparateCustomerRequest;
+package com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

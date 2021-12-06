@@ -13,5 +13,7 @@ public class CarDamageSearchListDto {
 
     private int carDamageId;
 
+    private int carCarId;
+
     private String damageDescription;
 }

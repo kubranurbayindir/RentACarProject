@@ -27,80 +27,80 @@ import com.etiya.rentACarSpring.entities.CarMaintenance;
 @Service
 public class CarMaintenanceManager implements CarMaintenanceService {
 
-	private CarMaintenanceDao carMaintenanceDao;
-	private ModelMapperService modelMapperService;
-	private RentalService rentalService;
+    private CarMaintenanceDao carMaintenanceDao;
+    private ModelMapperService modelMapperService;
+    private RentalService rentalService;
 
-	@Autowired
-	public CarMaintenanceManager(CarMaintenanceDao carMaintenanceDao, ModelMapperService modelMapperService,
-			RentalService rentalService) {
-		super();
-		this.carMaintenanceDao = carMaintenanceDao;
-		this.modelMapperService = modelMapperService;
-		this.rentalService = rentalService;
-	}
+    @Autowired
+    public CarMaintenanceManager(CarMaintenanceDao carMaintenanceDao, ModelMapperService modelMapperService,
+                                 RentalService rentalService) {
+        super();
+        this.carMaintenanceDao = carMaintenanceDao;
+        this.modelMapperService = modelMapperService;
+        this.rentalService = rentalService;
+    }
 
-	@Override
-	public DataResult<List<CarMaintenanceSearchListDto>> getAll() {
-		List<CarMaintenance> result = this.carMaintenanceDao.findAll();
-		List<CarMaintenanceSearchListDto> response = result.stream().map(
-				carMaintenance -> modelMapperService.forDto().map(carMaintenance, CarMaintenanceSearchListDto.class))
-				.collect(Collectors.toList());
+    @Override
+    public DataResult<List<CarMaintenanceSearchListDto>> getAll() {
+        List<CarMaintenance> result = this.carMaintenanceDao.findAll();
+        List<CarMaintenanceSearchListDto> response = result.stream().map(
+                        carMaintenance -> modelMapperService.forDto().map(carMaintenance, CarMaintenanceSearchListDto.class))
+                .collect(Collectors.toList());
 
-		return new SuccesDataResult<List<CarMaintenanceSearchListDto>>(response);
-	}
+        return new SuccesDataResult<List<CarMaintenanceSearchListDto>>(response);
+    }
 
-	@Override
-	public Result Add(CreateCarMaintenanceRequest createCarMaintenanceRequest) {
-		Result result = BusinnessRules.run(checkIfCarIsRentedNow(createCarMaintenanceRequest.getCarId()));
-		if (result != null) {
-			return result;
-		}
+    @Override
+    public Result Add(CreateCarMaintenanceRequest createCarMaintenanceRequest) {
+        Result result = BusinnessRules.run(checkIfCarIsRentedNow(createCarMaintenanceRequest.getCarId()));
+        if (result != null) {
+            return result;
+        }
 
-		CarMaintenance carMaintenance = modelMapperService.forRequest().map(createCarMaintenanceRequest,
-				CarMaintenance.class);
-		this.carMaintenanceDao.save(carMaintenance);
-		return new SuccesResult("Ekleme İslemi Basarili");
-	}
+        CarMaintenance carMaintenance = modelMapperService.forRequest().map(createCarMaintenanceRequest,
+                CarMaintenance.class);
+        this.carMaintenanceDao.save(carMaintenance);
+        return new SuccesResult("Ekleme İslemi Basarili");
+    }
 
-	@Override
-	public Result Update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
-		CarMaintenance carMaintenance = modelMapperService.forRequest().map(updateCarMaintenanceRequest,
-				CarMaintenance.class);
-		this.carMaintenanceDao.save(carMaintenance);
-		return new SuccesResult(Messages.updatedColor);
-	}
+    @Override
+    public Result Update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
+        CarMaintenance carMaintenance = modelMapperService.forRequest().map(updateCarMaintenanceRequest,
+                CarMaintenance.class);
+        this.carMaintenanceDao.save(carMaintenance);
+        return new SuccesResult(Messages.updatedColor);
+    }
 
-	@Override
-	public Result Delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) {
-		this.carMaintenanceDao.deleteById(deleteCarMaintenanceRequest.getCarMaintenanseId());
-		return new SuccesResult(Messages.deletedColor);
-	}
+    @Override
+    public Result Delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) {
+        this.carMaintenanceDao.deleteById(deleteCarMaintenanceRequest.getCarMaintenanseId());
+        return new SuccesResult(Messages.deletedColor);
+    }
 
-	@Override
-	public DataResult<CarMaintenance> getbyId(int carId) {
-		return new SuccesDataResult<CarMaintenance>(this.carMaintenanceDao.getById(carId));
-	}
+    @Override
+    public DataResult<CarMaintenance> getbyId(int carId) {
+        return new SuccesDataResult<CarMaintenance>(this.carMaintenanceDao.getById(carId));
+    }
 
-	@Override
-	public Result CheckIfCarIsAtMaintenance(int carId) {
-		List<CarMaintenance> result = this.carMaintenanceDao.getByCar_CarId(carId);
-		if (result != null) {
-			for (CarMaintenance carMaintenances : this.carMaintenanceDao.getByCar_CarId(carId)) {
-				if (carMaintenances.getReturnDate() == null) {
-					return new ErrorResult("Araç bakımdadır..");
-				}
-			}
-		}
-		return new SuccesResult();
-	}
+    @Override
+    public Result CheckIfCarIsAtMaintenance(int carId) {
+        List<CarMaintenance> result = this.carMaintenanceDao.getByCar_CarId(carId);
+        if (result != null) {
+            for (CarMaintenance carMaintenances : this.carMaintenanceDao.getByCar_CarId(carId)) {
+                if (carMaintenances.getReturnDate() == null) {
+                    return new ErrorResult("Araç bakımdadır..");
+                }
+            }
+        }
+        return new SuccesResult();
+    }
 
-	private Result checkIfCarIsRentedNow(int carId) {
-		Result isCarReturned = rentalService.checkCarRentalStatus(carId);
-		if (!isCarReturned.isSuccess()) {
-			return new ErrorResult("Araç kirada olduğu için bakıma gönderilemez.");
-		}
-		return new SuccesResult();
-	}
+    private Result checkIfCarIsRentedNow(int carId) {
+        Result isCarReturned = rentalService.checkCarRentalStatus(carId);
+        if (!isCarReturned.isSuccess()) {
+            return new ErrorResult("Araç kirada olduğu için bakıma gönderilemez.");
+        }
+        return new SuccesResult();
+    }
 
 }

@@ -29,7 +29,7 @@ public class UsersController {
 		this.userService = userService;
 	}
 
-	@GetMapping("all")
+	@GetMapping("getAll")
 	public DataResult<List<UserSearchListDto>> getAll() {
 		return userService.getAll();
 	}

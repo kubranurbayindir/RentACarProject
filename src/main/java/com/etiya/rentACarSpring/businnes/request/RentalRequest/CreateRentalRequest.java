@@ -2,6 +2,7 @@ package com.etiya.rentACarSpring.businnes.request.RentalRequest;
 
 import java.sql.Date;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -19,14 +20,10 @@ public class CreateRentalRequest {
 	
 	@JsonIgnore
 	private int rentalId;
-	
+
 	@NotNull
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date rentDate;
-
-	
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date returnDate;
 
 	@NotNull
 	private int userId;
@@ -34,11 +31,9 @@ public class CreateRentalRequest {
 	@NotNull
 	private int carId;
 
-	private int returnKilometer;
-
 	private int takeCityId;
 
-	private int returnCityId;
+
 
 	
 }

@@ -2,19 +2,18 @@ package com.etiya.rentACarSpring.ws;
 
 import javax.validation.Valid;
 
+import com.etiya.rentACarSpring.businnes.dtos.CorparateCustomerSearchListDto;
+import com.etiya.rentACarSpring.core.utilities.results.DataResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.etiya.rentACarSpring.businnes.abstracts.CorparateCustomerService;
-import com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest.CorparateCustomerRequest.CreateCorparateRequest;
-import com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest.CorparateCustomerRequest.DeleteCorparateRequest;
-import com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest.CorparateCustomerRequest.UpdateCorparateRequest;
+import com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest.CreateCorparateRequest;
+import com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest.DeleteCorparateRequest;
+import com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest.UpdateCorparateRequest;
 import com.etiya.rentACarSpring.core.utilities.results.Result;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/corparatecustomers")
@@ -25,6 +24,11 @@ public class CorparateCustomersController {
 	public CorparateCustomersController(CorparateCustomerService corparateCustomerService) {
 		super();
 		this.corparateCustomerService = corparateCustomerService;
+	}
+
+	@GetMapping("getAll")
+	public DataResult<List<CorparateCustomerSearchListDto>> getAll() {
+		return corparateCustomerService.getAll();
 	}
 	
 	@PostMapping("add")

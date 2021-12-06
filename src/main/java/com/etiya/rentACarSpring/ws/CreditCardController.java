@@ -32,7 +32,7 @@ public class CreditCardController {
 		this.creditCardService = creditCardService;
 	}
 
-	@GetMapping("all")
+	@GetMapping("getAll")
 	public DataResult<List<CreditCardSearchListDto>> getAll() {
 		return this.creditCardService.getAll();
 	}

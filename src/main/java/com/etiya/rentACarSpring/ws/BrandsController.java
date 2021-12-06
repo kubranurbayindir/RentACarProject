@@ -2,19 +2,18 @@ package com.etiya.rentACarSpring.ws;
 
 import javax.validation.Valid;
 
+import com.etiya.rentACarSpring.businnes.dtos.BrandSearchListDto;
+import com.etiya.rentACarSpring.core.utilities.results.DataResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.etiya.rentACarSpring.businnes.abstracts.BrandService;
 import com.etiya.rentACarSpring.businnes.request.BrandRequest.CreateBrandRequest;
 import com.etiya.rentACarSpring.businnes.request.BrandRequest.DeleteBrandRequest;
 import com.etiya.rentACarSpring.businnes.request.BrandRequest.UpdateBrandRequest;
 import com.etiya.rentACarSpring.core.utilities.results.Result;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/brands")
@@ -26,6 +25,10 @@ public class BrandsController {
 	public BrandsController(BrandService brandService) {
 		super();
 		this.brandService = brandService;
+	}
+	@GetMapping("getAll")
+	public DataResult<List<BrandSearchListDto>> getAll(){
+		return brandService.getAll();
 	}
 
 	@PostMapping("add")

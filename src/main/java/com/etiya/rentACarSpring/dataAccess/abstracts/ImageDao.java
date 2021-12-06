@@ -13,5 +13,4 @@ public interface ImageDao extends JpaRepository<Image, Integer>  {
 	List<Image> getByCar_CarId(int carId);
 	
 	boolean existsByCar_CarId(int carId);
-
 }

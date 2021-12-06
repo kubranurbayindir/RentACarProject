@@ -4,6 +4,7 @@ import java.sql.Date;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,18 +13,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateInvoiceRequest {
-	
+	@NotNull
 	private int invoiceId;
-	
-	private String invoiceNumber;
 
+	private String invoiceNumber;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date createDate;
 
-	private Double totalPrice;
-
+	private int totalPrice;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private int totalRentDay;
-	
-	private int userId;
-	
+
 	private int rentalId;
 }

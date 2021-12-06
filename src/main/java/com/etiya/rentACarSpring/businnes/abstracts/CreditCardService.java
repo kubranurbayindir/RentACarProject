@@ -14,5 +14,7 @@ public interface CreditCardService {
 	Result add(CreateCreditCardRequest createCreditCardRequest);
 	Result update(UpdateCreditCardRequest updateCreditCardRequest);
 	Result delete(DeleteCreditCardRequest deleteCarRequest);
+	Result checkIfCreditCardCvvFormatIsTrue(String cvv);
+	Result checkIfCreditCardFormatIsTrue(String cardNumber);
 
 }

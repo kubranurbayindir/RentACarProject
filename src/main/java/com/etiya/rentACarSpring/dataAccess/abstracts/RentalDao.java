@@ -6,28 +6,27 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-import com.etiya.rentACarSpring.businnes.dtos.CarMaintenanceSearchListDto;
-import com.etiya.rentACarSpring.businnes.dtos.CarSearchListDto;
-import com.etiya.rentACarSpring.businnes.dtos.RentalSearchListDto;
-import com.etiya.rentACarSpring.entities.Invoice;
 import com.etiya.rentACarSpring.entities.Rental;
 
 public interface RentalDao extends JpaRepository<Rental, Integer> {
-	Rental getByReturnDate(Date returnDate);
 
-	List<Rental> getByCar_CarId(int carId);
+    List<Rental> getByCar_CarId(int carId);
 
-	Rental getByRentalId(int rentalId);
-	
+    Rental getByRentalId(int rentalId);
 
-//	@Query("Select new com.etiya.rentACarSpring.businnes.dtos.RentalSearchListDto" 
-//			+ "(c.carId,c.dailyPrice,c.description) "
-//			+ "From Car c Inner Join  c.carMaintenances cm where m.return_date ")
-//	List<CarSearchListDto> getAllWithoutMaintenanceOfCar();
+    @Query(value = "Select ads.additional_service_price from additional_services as ads \n" +
+            "inner join rental_additional_services as rads on ads.additional_service_id=rads.additional_service_id \n" +
+            "inner join rentals as r on rads.rental_id=r.rental_id \n" +
+            "where r.rental_id=:rentalId ", nativeQuery = true)
+    List<Integer> getAdditionalRentalPrice(int rentalId);
 
-//	@Query(value = "select c.id from cars c inner join car_maintenances m on "
-//			+ "c.id=m.id where m.return_date is null and c.id=:carId ", nativeQuery = true)
-//	CarMaintenanceSearchListDto getByCarIdIfMaintenanceReturnDateIsNull(int carId);
+    @Query(value = "select c.daily_price from cars as c inner join rentals as r on c.id=r.id where r.rental_id=:rentalId ", nativeQuery = true)
+    Integer getDailyPriceOfCar(int rentalId);
+
+
+
+
+
+
 }
