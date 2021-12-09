@@ -1,10 +1,8 @@
 package com.etiya.rentACarSpring.businnes.concretes;
 
-import com.etiya.rentACarSpring.businnes.dtos.BrandSearchListDto;
 import com.etiya.rentACarSpring.businnes.dtos.ColorSearchListDto;
-import com.etiya.rentACarSpring.core.utilities.results.DataResult;
-import com.etiya.rentACarSpring.core.utilities.results.SuccesDataResult;
-import com.etiya.rentACarSpring.entities.Brand;
+import com.etiya.rentACarSpring.core.utilities.businnessRules.BusinnessRules;
+import com.etiya.rentACarSpring.core.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -16,9 +14,6 @@ import com.etiya.rentACarSpring.businnes.request.ColorRequest.DeleteColorRequest
 import com.etiya.rentACarSpring.businnes.request.ColorRequest.UpdateColorRequest;
 import com.etiya.rentACarSpring.core.utilities.mapping.ModelMapperService;
 
-import com.etiya.rentACarSpring.core.utilities.results.Result;
-
-import com.etiya.rentACarSpring.core.utilities.results.SuccesResult;
 import com.etiya.rentACarSpring.dataAccess.abstracts.ColorDao;
 
 import com.etiya.rentACarSpring.entities.Color;
@@ -58,6 +53,11 @@ public class ColorManager implements ColorService {
 
     @Override
     public Result update(UpdateColorRequest updateColorRequest) {
+        Result result = BusinnessRules.run(checkIfColorExists(updateColorRequest.getColorId())
+        );
+        if (result != null) {
+            return result;
+        }
         Color color = modelMapperService.forRequest().map(updateColorRequest, Color.class);
         this.colorDao.save(color);
         return new SuccesResult(Messages.updatedColor);
@@ -65,8 +65,21 @@ public class ColorManager implements ColorService {
 
     @Override
     public Result delete(DeleteColorRequest deleteColorRequest) {
+        Result result = BusinnessRules.run(checkIfColorExists(deleteColorRequest.getColorId())
+        );
+        if (result != null) {
+            return result;
+        }
         this.colorDao.deleteById(deleteColorRequest.getColorId());
         return new SuccesResult(Messages.deletedColor);
+    }
+
+    @Override
+    public Result checkIfColorExists(int colorId) {
+        if (!this.colorDao.existsById(colorId)) {
+            return new ErrorResult("colorıd mevcut değil");
+        }
+        return new SuccesResult();
     }
 
 }

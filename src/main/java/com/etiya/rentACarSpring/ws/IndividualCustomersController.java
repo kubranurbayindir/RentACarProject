@@ -44,8 +44,8 @@ public class IndividualCustomersController {
 	}
 	
 	@PutMapping("update")
-	public Result update(@RequestBody @Valid UpdateIndividualCustomerRequest updateRentalRequest) {
-		return this.individualCustomerService.Update(updateRentalRequest);
+	public Result update(@RequestBody @Valid UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
+		return this.individualCustomerService.Update(updateIndividualCustomerRequest);
 	}
 
 	@DeleteMapping("delete")

@@ -19,4 +19,5 @@ public interface BrandService {
 	Result update(UpdateBrandRequest updateBrandRequest);
 
 	Result delete(DeleteBrandRequest deleteBrandRequest);
+	Result checkIfBrandExists(int brandId);
 }

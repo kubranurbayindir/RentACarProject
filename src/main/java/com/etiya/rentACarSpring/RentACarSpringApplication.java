@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -73,6 +74,13 @@ public class RentACarSpringApplication {
 	@ExceptionHandler(EntityNotFoundException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public  ErrorResult handleEntityNotFoundException(EntityNotFoundException exception){
+		ErrorResult error=new ErrorResult("Böyle bir kayıt bulunmamaktadır.");
+		return  error;
+	}
+
+	@ExceptionHandler(EmptyResultDataAccessException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public  ErrorResult EmptyResultDataAccessException(EmptyResultDataAccessException exception){
 		ErrorResult error=new ErrorResult("Böyle bir kayıt bulunmamaktadır.");
 		return  error;
 	}

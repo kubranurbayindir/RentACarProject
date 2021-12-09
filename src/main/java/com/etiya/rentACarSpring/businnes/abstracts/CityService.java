@@ -18,4 +18,5 @@ public interface CityService {
 	Result update(UpdateCityRequest updateCityRequest);
 	Result delete(DeleteCityRequest deleteCityRequest);
 	DataResult<City> getbyId(int cityId);
+	Result checkIfCityExists(int cityId);
 }

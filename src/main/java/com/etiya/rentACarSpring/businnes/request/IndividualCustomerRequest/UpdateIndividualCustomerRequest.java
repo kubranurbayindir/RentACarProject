@@ -2,14 +2,19 @@ package com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Date;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateIndividualCustomerRequest {
     @NotNull
-    private int individualCustomersId;
+    private int userId;
     @NotNull
     private String firstName;
     @NotNull
@@ -24,4 +29,8 @@ public class UpdateIndividualCustomerRequest {
     private String email;
     @NotNull
     private String password;
+
+    @NotNull
+    @JsonIgnore
+    private int findexScore;
 }

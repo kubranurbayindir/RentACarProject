@@ -1,7 +1,6 @@
 package com.etiya.rentACarSpring.businnes.concretes;
 
 import com.etiya.rentACarSpring.businnes.abstracts.MessageService;
-import com.etiya.rentACarSpring.businnes.constants.Messages;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.CreateMessageRequest;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.DeleteMessageRequest;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.UpdateMessageRequest;
@@ -11,7 +10,6 @@ import com.etiya.rentACarSpring.core.utilities.results.Result;
 import com.etiya.rentACarSpring.core.utilities.results.SuccesDataResult;
 import com.etiya.rentACarSpring.core.utilities.results.SuccesResult;
 import com.etiya.rentACarSpring.dataAccess.abstracts.MessageDao;
-import com.etiya.rentACarSpring.entities.City;
 import com.etiya.rentACarSpring.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

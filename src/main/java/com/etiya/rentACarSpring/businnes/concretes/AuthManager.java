@@ -52,11 +52,11 @@ public class AuthManager implements AuthService {
             return result;
         }
 
-        CreateIndividualCustomerRequest crateCreateIndividualCustomerRequest = modelMapperService.forRequest()
+        CreateIndividualCustomerRequest createIndividualCustomerRequest = modelMapperService.forRequest()
                 .map(individualRegisterRequest, CreateIndividualCustomerRequest.class);
 
-        crateCreateIndividualCustomerRequest.setFindexScore(findexScoreService.getIndividualFindexScore(individualRegisterRequest.getIdentityNumber()));
-        this.individualCustomerService.Save(crateCreateIndividualCustomerRequest);
+        createIndividualCustomerRequest.setFindexScore(findexScoreService.getIndividualFindexScore(individualRegisterRequest.getIdentityNumber()));
+        this.individualCustomerService.Save(createIndividualCustomerRequest);
 
         return new SuccesResult(Messages.individualRegister);
     }

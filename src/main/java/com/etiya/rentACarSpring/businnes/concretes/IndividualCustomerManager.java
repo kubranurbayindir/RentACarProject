@@ -19,6 +19,7 @@ import com.etiya.rentACarSpring.core.utilities.results.SuccesDataResult;
 import com.etiya.rentACarSpring.core.utilities.results.SuccesResult;
 import com.etiya.rentACarSpring.dataAccess.abstracts.IndividualCustomerDao;
 import com.etiya.rentACarSpring.entities.IndividualCustomer;
+import com.etiya.rentACarSpring.core.utilities.adapter.findexScoreServiceAdapter.findexScoreService;
 
 
 @Service
@@ -26,13 +27,16 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 
     private IndividualCustomerDao individualCustomerDao;
     private ModelMapperService modelMapperService;
+    private findexScoreService findexScoreService;
 
     @Autowired
     public IndividualCustomerManager(IndividualCustomerDao individualCustomerDao,
-                                     ModelMapperService modelMapperService) {
+                                     ModelMapperService modelMapperService,
+                                     findexScoreService findexScoreService) {
         super();
         this.individualCustomerDao = individualCustomerDao;
         this.modelMapperService = modelMapperService;
+        this.findexScoreService = findexScoreService;
     }
 
     @Override
@@ -48,6 +52,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
     @Override
     public Result Save(CreateIndividualCustomerRequest createIndividualCustomerRequest) {
         IndividualCustomer individualCustomer = modelMapperService.forRequest().map(createIndividualCustomerRequest, IndividualCustomer.class);
+        individualCustomer.setFindexScore(findexScoreService.getIndividualFindexScore(individualCustomer.getIdentityNumber()));
         this.individualCustomerDao.save(individualCustomer);
         return new SuccesResult("Ekleme İslemi Basarili");
     }
@@ -55,7 +60,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
     @Override
     public Result Update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
         IndividualCustomer individualCustomer = modelMapperService.forRequest().map(updateIndividualCustomerRequest, IndividualCustomer.class);
-
+        individualCustomer.setFindexScore(findexScoreService.getIndividualFindexScore(individualCustomer.getIdentityNumber()));
         this.individualCustomerDao.save(individualCustomer);
         return new SuccesResult("Guncelleme İslemi Basarili");
     }

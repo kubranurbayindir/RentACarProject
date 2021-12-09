@@ -1,10 +1,8 @@
 package com.etiya.rentACarSpring.businnes.concretes;
 
 import com.etiya.rentACarSpring.businnes.dtos.CitySearchListDto;
-import com.etiya.rentACarSpring.businnes.dtos.ColorSearchListDto;
 import com.etiya.rentACarSpring.core.utilities.businnessRules.BusinnessRules;
 import com.etiya.rentACarSpring.core.utilities.results.*;
-import com.etiya.rentACarSpring.entities.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -58,6 +56,11 @@ public class CityManager implements CityService {
 
     @Override
     public Result update(UpdateCityRequest updateCityRequest) {
+        Result result = BusinnessRules.run(checkIfCityExists(updateCityRequest.getCityId())
+        );
+        if (result != null) {
+            return result;
+        }
         City city = modelMapperService.forRequest().map(updateCityRequest, City.class);
         this.cityDao.save(city);
         return new SuccesResult(Messages.updatedCity);
@@ -65,6 +68,11 @@ public class CityManager implements CityService {
 
     @Override
     public Result delete(DeleteCityRequest deleteCityRequest) {
+        Result result = BusinnessRules.run(checkIfCityExists(deleteCityRequest.getCityId())
+        );
+        if (result != null) {
+            return result;
+        }
         this.cityDao.deleteById(deleteCityRequest.getCityId());
         return new SuccesResult(Messages.deletedCity);
     }
@@ -78,6 +86,14 @@ public class CityManager implements CityService {
         City city = this.cityDao.getByCityName(cityName);
         if (city != null) {
             return new ErrorResult("Şehir kayıtlı.");
+        }
+        return new SuccesResult();
+    }
+
+    @Override
+    public Result checkIfCityExists(int cityId) {
+        if (!this.cityDao.existsById(cityId)) {
+            return new ErrorResult("cityId mevcut değil");
         }
         return new SuccesResult();
     }

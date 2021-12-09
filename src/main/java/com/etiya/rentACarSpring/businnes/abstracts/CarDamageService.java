@@ -8,11 +8,12 @@ import com.etiya.rentACarSpring.businnes.request.CarDamageRequest.UpdateCarDamag
 import com.etiya.rentACarSpring.core.utilities.results.DataResult;
 import com.etiya.rentACarSpring.core.utilities.results.Result;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 public interface CarDamageService {
     DataResult<List<CarDamageSearchListDto>> getAll();
     Result add(CreateCarDamageRequest createCarDamageRequest);
     Result update(UpdateCarDamageRequest updateCarDamageRequest);
-    Result delete(DeleteCarDamageRequest deleteCarDamageRequest);
+    Result delete(DeleteCarDamageRequest deleteCarDamageRequest) throws EntityNotFoundException ;
 }

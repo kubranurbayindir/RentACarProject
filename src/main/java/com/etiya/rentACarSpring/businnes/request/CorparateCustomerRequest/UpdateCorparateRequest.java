@@ -1,6 +1,7 @@
 package com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest;
 
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 
@@ -13,11 +14,14 @@ import lombok.NoArgsConstructor;
 public class UpdateCorparateRequest {
 	
 	@NotNull
-	private int corparateCustomerId;
+	private int userId;
 	@NotNull
 	private String companyName;
 	@NotNull
 	private String taxNumber;
 	@NotNull
-	private int rentalId;
+	@Email
+	private String email;
+	@NotNull
+	private String password;
 }
