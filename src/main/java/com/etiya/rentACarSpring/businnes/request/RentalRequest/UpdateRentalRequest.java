@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UpdateRentalRequest {
 
+
     private int rentalId;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date rentDate;

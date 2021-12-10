@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.etiya.rentACarSpring.businnes.request.CreditCardRentalRequest;
+import com.etiya.rentACarSpring.businnes.request.InvoiceRequest.CreateInvoiceRequest;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.UpdateMessageRequest;
 import com.etiya.rentACarSpring.businnes.request.PosServiceRequest;
 import com.etiya.rentACarSpring.core.utilities.adapter.posServiceAdapter.posSystemService;
@@ -103,19 +104,21 @@ public class RentalManager implements RentalService {
         }
 
         Rental rental = modelMapperService.forRequest().map(dropOffCarRequest, Rental.class);
-        Car car = rental.getCar();
-
-
         Rental result = this.rentalDao.getByRentalId(dropOffCarRequest.getRentalId());
+        rental.setRentalId(result.getRentalId());
         rental.setRentDate(result.getRentDate());
         rental.setTakeCity(result.getTakeCity());
         rental.setUser(result.getUser());
-        rental.setCar(car);
+        rental.setCar(result.getCar());
+
+        this.rentalDao.save(rental);
+
+        this.invoiceService.Add(dropOffCarRequest);
+
+        var car = this.carService.getbyId(rental.getCar().getCarId()).getData();
         car.setKilometer(rental.getReturnKilometer());
         car.setCity(rental.getReturnCity());
 
-        this.rentalDao.save(rental);
-        this.invoiceService.Add(dropOffCarRequest);
         return new SuccesResult("Araç kiradan döndü ve fatura oluşturuldu.");
     }
 
