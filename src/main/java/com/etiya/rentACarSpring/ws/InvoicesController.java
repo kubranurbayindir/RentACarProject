@@ -47,17 +47,17 @@ public class InvoicesController {
 	@PostMapping("add")
 	public Result add(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) {
 
-		return this.invoiceService.Add(createInvoiceRequest);
+		return this.invoiceService.add(createInvoiceRequest);
 	}
 
 	@PutMapping("update")
 	public Result update(@RequestBody @Valid UpdateInvoiceRequest updateInvoiceRequest) {
-		return this.invoiceService.Update(updateInvoiceRequest);
+		return this.invoiceService.update(updateInvoiceRequest);
 	}
 
 	@DeleteMapping("delete")
 	public Result delete(@RequestBody @Valid DeleteInvoiceRequest deleteInvoiceRequest) {
-		return this.invoiceService.Delete(deleteInvoiceRequest);
+		return this.invoiceService.delete(deleteInvoiceRequest);
 	}
 
 	@GetMapping("getInvoiceByDate")

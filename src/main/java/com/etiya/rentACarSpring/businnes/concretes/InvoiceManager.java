@@ -59,14 +59,13 @@ public class InvoiceManager implements InvoiceService {
     }
 
     @Override
-    public Result Add(CreateInvoiceRequest createInvoiceRequest) {
+    public Result add(CreateInvoiceRequest createInvoiceRequest) {
         Result rules = BusinnessRules.run(ifExistRentalIdOnInvoice(createInvoiceRequest.getRentalId())
         );
 
         if (rules != null) {
             return rules;
         }
-
 
         var rental = this.rentalService.getById(createInvoiceRequest.getRentalId());
         var car = this.carService.getbyId(rental.getCar().getCarId()).getData();
@@ -89,8 +88,9 @@ public class InvoiceManager implements InvoiceService {
         this.invoiceDao.save(invoice);
         return new SuccesResult(Messages.addedInvoice);
     }
+
     @Override
-    public Result Add(DropOffCarRequest dropOffCarRequest) {
+    public Result addInvoiceToRentalReturn(DropOffCarRequest dropOffCarRequest) {
         Result rules = BusinnessRules.run(ifExistRentalIdOnInvoice(dropOffCarRequest.getRentalId())
         );
 
@@ -109,7 +109,7 @@ public class InvoiceManager implements InvoiceService {
 
 
     @Override
-    public Result Update(UpdateInvoiceRequest updateInvoiceRequest) {
+    public Result update(UpdateInvoiceRequest updateInvoiceRequest) {
         Result rules = BusinnessRules.run(ifExistRentalIdOnInvoice(updateInvoiceRequest.getRentalId())
         );
 
@@ -122,7 +122,7 @@ public class InvoiceManager implements InvoiceService {
     }
 
     @Override
-    public Result Delete(DeleteInvoiceRequest deleteInvoiceRequest) {
+    public Result delete(DeleteInvoiceRequest deleteInvoiceRequest) {
         this.invoiceDao.deleteById(deleteInvoiceRequest.getInvoiceId());
         return new SuccesResult(Messages.deleteInvoice);
 

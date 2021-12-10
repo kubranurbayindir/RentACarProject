@@ -113,7 +113,7 @@ public class RentalManager implements RentalService {
 
         this.rentalDao.save(rental);
 
-        this.invoiceService.Add(dropOffCarRequest);
+        this.invoiceService.addInvoiceToRentalReturn(dropOffCarRequest);
 
         var car = this.carService.getbyId(rental.getCar().getCarId()).getData();
         car.setKilometer(rental.getReturnKilometer());
