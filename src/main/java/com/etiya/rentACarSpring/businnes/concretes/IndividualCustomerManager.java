@@ -3,6 +3,7 @@ package com.etiya.rentACarSpring.businnes.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.etiya.rentACarSpring.core.utilities.adapter.findexScoreServiceAdapter.findexScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,6 @@ import com.etiya.rentACarSpring.core.utilities.results.SuccesDataResult;
 import com.etiya.rentACarSpring.core.utilities.results.SuccesResult;
 import com.etiya.rentACarSpring.dataAccess.abstracts.IndividualCustomerDao;
 import com.etiya.rentACarSpring.entities.IndividualCustomer;
-import com.etiya.rentACarSpring.core.utilities.adapter.findexScoreServiceAdapter.findexScoreService;
 
 
 @Service
@@ -29,14 +29,14 @@ public class IndividualCustomerManager implements IndividualCustomerService {
     private ModelMapperService modelMapperService;
     private findexScoreService findexScoreService;
 
+
     @Autowired
     public IndividualCustomerManager(IndividualCustomerDao individualCustomerDao,
-                                     ModelMapperService modelMapperService,
-                                     findexScoreService findexScoreService) {
+                                     ModelMapperService modelMapperService,findexScoreService findexScoreService) {
         super();
         this.individualCustomerDao = individualCustomerDao;
         this.modelMapperService = modelMapperService;
-        this.findexScoreService = findexScoreService;
+        this.findexScoreService=findexScoreService;
     }
 
     @Override

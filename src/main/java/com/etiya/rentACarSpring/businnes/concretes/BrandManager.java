@@ -60,8 +60,7 @@ public class BrandManager implements BrandService {
 
     @Override
     public Result update(UpdateBrandRequest updateBrandRequest) {
-        Result result = BusinnessRules.run(checkBrandNameDublicated(updateBrandRequest.getBrandName()),
-                checkIfBrandExists(updateBrandRequest.getBrandId()));
+        Result result = BusinnessRules.run(checkIfBrandExists(updateBrandRequest.getBrandId()));
         if (result != null) {
             return result;
         }
@@ -82,8 +81,8 @@ public class BrandManager implements BrandService {
         return new SuccesResult(messageService.getByEnglishMessageByMessageId(3));
     }
 
-    @Override
-    public Result checkIfBrandExists(int brandId) {
+
+    private Result checkIfBrandExists(int brandId) {
         if (!this.brandDao.existsById(brandId)) {
             return new ErrorResult("brand Id bulunamadı");
         }

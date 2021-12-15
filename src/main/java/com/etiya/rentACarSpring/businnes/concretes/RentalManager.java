@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.etiya.rentACarSpring.businnes.request.CreditCardRentalRequest;
-import com.etiya.rentACarSpring.businnes.request.InvoiceRequest.CreateInvoiceRequest;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.UpdateMessageRequest;
 import com.etiya.rentACarSpring.businnes.request.PosServiceRequest;
 import com.etiya.rentACarSpring.core.utilities.adapter.posServiceAdapter.posSystemService;
@@ -93,10 +92,12 @@ public class RentalManager implements RentalService {
 
     @Override
     public Result dropOffCar(DropOffCarRequest dropOffCarRequest) {
-        Result rules = BusinnessRules.run(checkCreditCardBalance(dropOffCarRequest, dropOffCarRequest.getCreditCardRentalRequest()),
+        Result rules = BusinnessRules.run(checkCreditCardBalance(dropOffCarRequest,
+                        dropOffCarRequest.getCreditCardRentalRequest()),
                 checkReturnDate(dropOffCarRequest.getRentalId()),
                 creditcardService.checkIfCreditCardCvvFormatIsTrue(dropOffCarRequest.getCreditCardRentalRequest().getCvv()),
                 creditcardService.checkIfCreditCardFormatIsTrue(dropOffCarRequest.getCreditCardRentalRequest().getCardNumber())
+
         );
 
         if (rules != null) {
@@ -113,7 +114,7 @@ public class RentalManager implements RentalService {
 
         this.rentalDao.save(rental);
 
-        this.invoiceService.addInvoiceToRentalReturn(dropOffCarRequest);
+        this.invoiceService.Add(dropOffCarRequest);
 
         var car = this.carService.getbyId(rental.getCar().getCarId()).getData();
         car.setKilometer(rental.getReturnKilometer());
@@ -123,14 +124,15 @@ public class RentalManager implements RentalService {
     }
 
     @Override
-    public Result Update(UpdateMessageRequest updateMessageRequest) {
-        Rental rental = modelMapperService.forRequest().map(updateMessageRequest, Rental.class);
-        this.rentalDao.save(rental);
-        return new SuccesResult(Messages.succesRental);
-    }
-
-    @Override
     public Result Delete(DeleteRentaRequest deleteRentalRequest) {
+        Result rules = BusinnessRules.run(checkIfRentalExists(deleteRentalRequest.getRentalId())
+        );
+
+        if (rules != null) {
+            return rules;
+        }
+
+
         this.rentalDao.deleteById(deleteRentalRequest.getRentalId());
         return new SuccesResult(Messages.deletedRental);
     }
@@ -204,6 +206,14 @@ public class RentalManager implements RentalService {
     private Result checkIfUserRegisteredSystem(int userId) {
         if (!this.userService.getById(userId).isSuccess()) {
             return new ErrorResult("Böyle bir kullanıcı sisteme kayıtlı değil, öncelikle kayıt olunuz.");
+        }
+        return new SuccesResult();
+    }
+
+    @Override
+    public Result checkIfRentalExists(int rentalId) {
+        if (!this.rentalDao.existsById(rentalId)) {
+            return new ErrorResult("rentalId mevcut değil");
         }
         return new SuccesResult();
     }

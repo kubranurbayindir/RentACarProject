@@ -20,17 +20,17 @@ public interface CarDao extends JpaRepository<Car, Integer> {
 
     @Query("Select new com.etiya.rentACarSpring.entities.complexTypes.CarDetailForColorAndBrand"
             + "(c.id,b.brandId,cl.colorId,b.brandName,cl.colorName,c.dailyPrice,c.description,i.imageUrl) "
-            + "From Car c Inner Join  c.brand b Inner Join c.color cl inner join c.images i where cl.colorId=:colorId")
+            + "From Car c Inner Join  c.brand b Inner Join c.color cl left join c.images i where cl.colorId=:colorId")
     List<CarDetailForColorAndBrand> getCarDetailByColor(int colorId);
 
     @Query("Select new com.etiya.rentACarSpring.entities.complexTypes.CarDetailForColorAndBrand"
             + "(c.id,b.brandId,cl.colorId,b.brandName,cl.colorName,c.dailyPrice,c.description,i.imageUrl) "
-            + "From Car c Inner Join  c.brand b Inner Join c.color cl inner join c.images i where b.brandId=:brandId")
+            + "From Car c Inner Join  c.brand b Inner Join c.color cl left join c.images i where b.brandId=:brandId")
     List<CarDetailForColorAndBrand> getCarDetailByBrand(int brandId);
 
     @Query("Select new com.etiya.rentACarSpring.entities.complexTypes.CarDetailForColorAndBrand"
             + "(c.id,b.brandId,cl.colorId,b.brandName,cl.colorName,c.dailyPrice,c.description,i.imageUrl) "
-            + "From Car c Inner Join  c.brand b Inner Join c.color cl inner join c.images i where c.carId=:carId")
+            + "From Car c Inner Join  c.brand b Inner Join c.color cl left join c.images i where c.carId=:carId")
     List<CarDetailForColorAndBrand> getCarDetailByCarId(int carId);
 
     @Query("Select new com.etiya.rentACarSpring.businnes.dtos.CarSearchListDto" + "(c.id,c.dailyPrice,c.description) "

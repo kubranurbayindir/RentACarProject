@@ -56,8 +56,9 @@ public class CarDamageManager implements CarDamageService {
     }
 
     @Override
-    public Result update(UpdateCarDamageRequest updateCarDamageRequest)  {
-        Result result = BusinnessRules.run(checkCarExistsInGallery(updateCarDamageRequest.getCarId()));
+    public Result update(UpdateCarDamageRequest updateCarDamageRequest) {
+        Result result = BusinnessRules.run(checkCarExistsInGallery(updateCarDamageRequest.getCarId()),
+                checkIfCarDamageIdExists(updateCarDamageRequest.getCarDamageId()));
         if (result != null) {
             return result;
         }
@@ -69,13 +70,27 @@ public class CarDamageManager implements CarDamageService {
 
     @Override
     public Result delete(DeleteCarDamageRequest deleteCarDamageRequest) throws EntityNotFoundException {
+        Result result = BusinnessRules.run(
+                checkIfCarDamageIdExists(deleteCarDamageRequest.getCarDamageId()));
+        if (result != null) {
+            return result;
+        }
+
         this.carDamageDao.deleteById(deleteCarDamageRequest.getCarDamageId());
         return new SuccesResult("Silindi");
     }
 
+    @Override
+    public Result checkIfCarDamageIdExists(int carDamageId) {
+        if (!this.carDamageDao.existsById(carDamageId)) {
+            return new ErrorResult("carDamageId Id bulunamadı");
+        }
+        return new SuccesResult();
+    }
+
     private Result checkCarExistsInGallery(int id) {
         boolean isExisting = carService.checkCarExistsInGallery(id).isSuccess();
-        if (!isExisting) {
+        if (isExisting) {
             return new SuccesResult();
         }
         return new ErrorResult("Galeride böyle bir araba yok.");

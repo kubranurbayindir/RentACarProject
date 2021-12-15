@@ -20,8 +20,6 @@ public class CreateCarMaintenanceRequest {
 	private int carMaintenanceId;
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date maintananceDate;
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date returnDate;
 
 	private int carId;
 }

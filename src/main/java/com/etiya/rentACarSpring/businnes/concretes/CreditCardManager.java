@@ -60,7 +60,6 @@ public class CreditCardManager implements CreditCardService {
     @Override
     public Result update(UpdateCreditCardRequest updateCreditCardRequest) {
         Result result = BusinnessRules.run(checkIfCreditCardFormatIsTrue(updateCreditCardRequest.getCardNumber()),
-                checkExistCardNumber(updateCreditCardRequest.getCardNumber()),
                 checkIfCreditCardCvvFormatIsTrue(updateCreditCardRequest.getCvv()));
         if (result != null) {
             return result;

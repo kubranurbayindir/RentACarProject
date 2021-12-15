@@ -1,7 +1,6 @@
 package com.etiya.rentACarSpring.businnes.request.IndividualCustomerRequest;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,8 +28,4 @@ public class UpdateIndividualCustomerRequest {
     private String email;
     @NotNull
     private String password;
-
-    @NotNull
-    @JsonIgnore
-    private int findexScore;
 }

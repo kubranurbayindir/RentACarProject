@@ -48,18 +48,25 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
     @Override
     public Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest) {
-        Result result = BusinnessRules.run(checkAdditionalServiceNameDublicated(updateAdditionalServiceRequest.getAdditionalServiceName()));
+        Result result = BusinnessRules.run(
+        checkIfAdditionalServicexists(updateAdditionalServiceRequest.getAdditionalServiceId()));
         if (result != null) {
             return result;
         }
 
         AdditionalService additionalService = modelMapperService.forRequest().map(updateAdditionalServiceRequest, AdditionalService.class);
         this.additionalServiceDao.save(additionalService);
-        return new SuccesResult("Eklendi");
+        return new SuccesResult("güncellendi");
     }
 
     @Override
     public Result delete(DeleteAdditionalServiceRequest deleteAdditionalServiceRequest) {
+        Result result = BusinnessRules.run(checkIfAdditionalServicexists(deleteAdditionalServiceRequest.getAdditionalServiceId())
+        );
+        if (result != null) {
+            return result;
+        }
+
         this.additionalServiceDao.deleteById(deleteAdditionalServiceRequest.getAdditionalServiceId());
         return new SuccesResult("Silindi");
     }
@@ -77,6 +84,14 @@ public class AdditionalServiceManager implements AdditionalServiceService {
         AdditionalService additionalService = this.additionalServiceDao.getByAdditionalServiceName(additionalServiceName.toLowerCase());
         if (additionalService != null) {
             return new ErrorResult("Bu isime ait baska bir hizmet bulunmaktadır.");
+        }
+        return new SuccesResult();
+    }
+
+
+    public Result checkIfAdditionalServicexists(int additionalServiceId) {
+        if (!this.additionalServiceDao.existsById(additionalServiceId)) {
+            return new ErrorResult("additionalServiceId  bulunamadı");
         }
         return new SuccesResult();
     }

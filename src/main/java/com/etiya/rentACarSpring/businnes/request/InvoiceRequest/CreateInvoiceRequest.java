@@ -18,20 +18,16 @@ import lombok.NoArgsConstructor;
 public class CreateInvoiceRequest {
 	@JsonIgnore
 	private int invoiceId;
-	@JsonIgnore
+	@NotNull
 	private String invoiceNumber;
-	@JsonIgnore
+	@NotNull
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date createDate;
-	@JsonIgnore
+	@NotNull
 	private int totalPrice;
-	@JsonIgnore
+	@NotNull
+	@Min(1)
 	private int totalRentDay;
-	@JsonIgnore
-	private int returnCityId;
-	@JsonIgnore
-	private Date rentDate;
-	@JsonIgnore
-	private Date returnDate;
 
 	@NotNull
 	private int rentalId;

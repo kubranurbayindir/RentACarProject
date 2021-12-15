@@ -52,7 +52,8 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
     @Override
     public Result Add(CreateCarMaintenanceRequest createCarMaintenanceRequest) {
-        Result result = BusinnessRules.run(checkIfCarIsRentedNow(createCarMaintenanceRequest.getCarId()));
+        Result result = BusinnessRules.run(checkIfCarIsRentedNow(createCarMaintenanceRequest.getCarId()),
+                CheckIfCarIsAtMaintenance(createCarMaintenanceRequest.getCarId()));
         if (result != null) {
             return result;
         }

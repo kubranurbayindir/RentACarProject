@@ -26,12 +26,12 @@ public class CorparateCustomerManager implements CorparateCustomerService {
     private findexScoreService findexScoreService;
 
     @Autowired
-    public CorparateCustomerManager(CorparateCustomerDao corparateCustomerDao, ModelMapperService modelMapperService,
-                                    findexScoreService findexScoreService) {
+    public CorparateCustomerManager(CorparateCustomerDao corparateCustomerDao, ModelMapperService modelMapperService
+                    ,findexScoreService findexScoreService) {
         super();
         this.corparateCustomerDao = corparateCustomerDao;
         this.modelMapperService = modelMapperService;
-        this.findexScoreService = findexScoreService;
+        this.findexScoreService =findexScoreService;
     }
 
     @Override
@@ -65,7 +65,6 @@ public class CorparateCustomerManager implements CorparateCustomerService {
         }
 
         CorparateCustomer corparateCustomer = modelMapperService.forRequest().map(updateCorparateRequest, CorparateCustomer.class);
-
         corparateCustomer.setFindexScore(findexScoreService.getIndividualFindexScore(corparateCustomer.getTaxNumber()));
         this.corparateCustomerDao.save(corparateCustomer);
         return new SuccesResult("Güncelleme İşlemi Başarılı");

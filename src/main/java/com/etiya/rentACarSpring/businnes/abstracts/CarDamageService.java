@@ -16,4 +16,5 @@ public interface CarDamageService {
     Result add(CreateCarDamageRequest createCarDamageRequest);
     Result update(UpdateCarDamageRequest updateCarDamageRequest);
     Result delete(DeleteCarDamageRequest deleteCarDamageRequest) throws EntityNotFoundException ;
+    Result checkIfCarDamageIdExists(int carDamageId);
 }

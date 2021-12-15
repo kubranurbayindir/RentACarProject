@@ -79,7 +79,7 @@ public class ImageManager implements ImageService {
     public Result Update(UpdateImageRequest updateImageRequest) throws IOException {
         Image image = this.imageDao.getById(updateImageRequest.getImageId());
 
-        var result = BusinnessRules.run(checkCarImagesCount(image.getCar().getCarId(), 5),
+        var result = BusinnessRules.run(checkCarImagesCount(image.getCar().getCarId(), 6),
                 this.fileHelper.checkImageType(updateImageRequest.getFile()),
                 checkIfImageExists(updateImageRequest.getImageId()));
 
