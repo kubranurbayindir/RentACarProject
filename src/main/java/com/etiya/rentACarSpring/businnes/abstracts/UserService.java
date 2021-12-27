@@ -12,9 +12,9 @@ import com.etiya.rentACarSpring.entities.User;
 
 public interface UserService {
 	DataResult<List<UserSearchListDto>> getAll();
-	Result Add(CreateUserRequest createUserRequest);
-	Result Update(UpdateUserRequest updateUserRequest);
-	Result Delete(DeleteUserRequest deleteUserRequest);
+	Result add(CreateUserRequest createUserRequest);
+	Result update(UpdateUserRequest updateUserRequest);
+	Result delete(DeleteUserRequest deleteUserRequest);
 	Result existByEmail(String email);
 	DataResult<User> getById(int userId);
 	DataResult<User> getByEmail(String email);

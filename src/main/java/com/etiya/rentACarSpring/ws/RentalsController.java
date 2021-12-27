@@ -40,7 +40,7 @@ public class RentalsController {
 	@PostMapping("add")
 	public Result add(@RequestBody @Valid CreateRentalRequest createRentalRequest) {
 
-		return this.rentalService.Add(createRentalRequest);
+		return this.rentalService.add(createRentalRequest);
 	}
 	
 	@PutMapping("returnTheCar")
@@ -50,7 +50,7 @@ public class RentalsController {
 
 	@DeleteMapping("delete")
 	public Result delete(@RequestBody @Valid DeleteRentaRequest deleteRentalRequest) {
-		return this.rentalService.Delete(deleteRentalRequest);
+		return this.rentalService.delete(deleteRentalRequest);
 	}
 
 }

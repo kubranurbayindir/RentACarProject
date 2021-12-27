@@ -3,9 +3,11 @@ package com.etiya.rentACarSpring.businnes.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.etiya.rentACarSpring.businnes.abstracts.MessageService;
+import com.etiya.rentACarSpring.businnes.abstracts.message.LanguageService;
+import com.etiya.rentACarSpring.businnes.abstracts.message.LanguageWordService;
 import com.etiya.rentACarSpring.core.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.etiya.rentACarSpring.businnes.abstracts.CarService;
@@ -26,16 +28,19 @@ public class CarManager implements CarService {
     private CarDao carDao;
     private ModelMapperService modelMapperService;
     private findexScoreService findexScoreService;
-    private MessageService messageService;
+    private Environment environment;
+    private LanguageWordService languageWordService;
 
     @Autowired
-    public CarManager(CarDao carDao, ModelMapperService modelMapperService, findexScoreService findexScoreService,
-                      MessageService messageService) {
+    public CarManager(CarDao carDao, ModelMapperService modelMapperService, findexScoreService findexScoreService, Environment environment
+            ,LanguageWordService languageWordService) {
         super();
         this.carDao = carDao;
         this.modelMapperService = modelMapperService;
         this.findexScoreService = findexScoreService;
-        this.messageService=messageService;
+        this.environment = environment;
+        this.languageWordService = languageWordService;
+
     }
 
     @Override
@@ -48,25 +53,25 @@ public class CarManager implements CarService {
     }
 
     @Override
-    public Result Save(CreateCarRequest createCarRequest) {
+    public Result save(CreateCarRequest createCarRequest) {
         Car car = modelMapperService.forRequest().map(createCarRequest, Car.class);
         car.setFindexScore(findexScoreService.sendCarFindexScore());
         this.carDao.save(car);
-        return new SuccesResult(messageService.getByEnglishMessageByMessageId(4));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(1,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
-    public Result Update(UpdateCarRequest updateCarRequest) {
+    public Result update(UpdateCarRequest updateCarRequest) {
         Car car = modelMapperService.forRequest().map(updateCarRequest, Car.class);
         this.carDao.save(car);
-        return new SuccesResult(messageService.getByEnglishMessageByMessageId(7));
+        return new SuccesResult();
     }
 
     @Override
-    public Result Delete(DeleteCarRequest deleteCarRequest) {
+    public Result delete(DeleteCarRequest deleteCarRequest) {
 
         this.carDao.deleteById(deleteCarRequest.getCarId());
-        return new SuccesResult(messageService.getByEnglishMessageByMessageId(6));
+        return new SuccesResult();
 
     }
 
@@ -115,7 +120,7 @@ public class CarManager implements CarService {
     }
 
     @Override
-    public DataResult<Car> getbyId(int carId) {
+    public DataResult<Car> getById(int carId) {
         return new SuccesDataResult<Car>(this.carDao.getById(carId));
     }
 
@@ -140,7 +145,7 @@ public class CarManager implements CarService {
         if (this.carDao.existsById(id)) {
             return new SuccesResult();
         }
-        return new ErrorResult(messageService.getByEnglishMessageByMessageId(8));
+        return new ErrorResult();
     }
 
 }

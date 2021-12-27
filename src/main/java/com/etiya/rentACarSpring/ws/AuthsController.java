@@ -40,6 +40,6 @@ public class AuthsController {
 	
 	@PostMapping("/login")
 	Result login(@Valid @RequestBody LoginRequest loginRequest) {
-		return this.authService.Login(loginRequest);
+		return this.authService.login(loginRequest);
 	}
 }

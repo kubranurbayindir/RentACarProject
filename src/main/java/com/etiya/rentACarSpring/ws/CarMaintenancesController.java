@@ -34,16 +34,16 @@ public class CarMaintenancesController {
 
 	@PostMapping("add")
 	public Result add(@RequestBody @Valid CreateCarMaintenanceRequest createCarMaintenanceRequest) {
-		return this.carMaintenanceService.Add(createCarMaintenanceRequest);
+		return this.carMaintenanceService.add(createCarMaintenanceRequest);
 	}
 
 	@PutMapping("update")
 	public Result update(@RequestBody @Valid UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
-		return this.carMaintenanceService.Update(updateCarMaintenanceRequest);
+		return this.carMaintenanceService.update(updateCarMaintenanceRequest);
 	}
 	
 	@DeleteMapping("delete")
 	public Result delete(@RequestBody @Valid DeleteCarMaintenanceRequest deletecarMaintenanceRequest) {
-		return this.carMaintenanceService.Delete(deletecarMaintenanceRequest);
+		return this.carMaintenanceService.delete(deletecarMaintenanceRequest);
 	}
 }

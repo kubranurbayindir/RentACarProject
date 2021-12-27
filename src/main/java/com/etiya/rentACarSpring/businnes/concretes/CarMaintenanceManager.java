@@ -51,9 +51,9 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     }
 
     @Override
-    public Result Add(CreateCarMaintenanceRequest createCarMaintenanceRequest) {
+    public Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest) {
         Result result = BusinnessRules.run(checkIfCarIsRentedNow(createCarMaintenanceRequest.getCarId()),
-                CheckIfCarIsAtMaintenance(createCarMaintenanceRequest.getCarId()));
+                checkIfCarIsAtMaintenance(createCarMaintenanceRequest.getCarId()));
         if (result != null) {
             return result;
         }
@@ -65,7 +65,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     }
 
     @Override
-    public Result Update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
+    public Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
         CarMaintenance carMaintenance = modelMapperService.forRequest().map(updateCarMaintenanceRequest,
                 CarMaintenance.class);
         this.carMaintenanceDao.save(carMaintenance);
@@ -73,18 +73,18 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     }
 
     @Override
-    public Result Delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) {
+    public Result delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) {
         this.carMaintenanceDao.deleteById(deleteCarMaintenanceRequest.getCarMaintenanseId());
         return new SuccesResult(Messages.deletedColor);
     }
 
     @Override
-    public DataResult<CarMaintenance> getbyId(int carId) {
+    public DataResult<CarMaintenance> getById(int carId) {
         return new SuccesDataResult<CarMaintenance>(this.carMaintenanceDao.getById(carId));
     }
 
     @Override
-    public Result CheckIfCarIsAtMaintenance(int carId) {
+    public Result checkIfCarIsAtMaintenance(int carId) {
         List<CarMaintenance> result = this.carMaintenanceDao.getByCar_CarId(carId);
         if (result != null) {
             for (CarMaintenance carMaintenances : this.carMaintenanceDao.getByCar_CarId(carId)) {

@@ -25,13 +25,13 @@ public interface CarService {
 
 	DataResult<List<CarDetail>> getCarWithBrandAndColorDetails();
 
-	DataResult<Car> getbyId(int carId);
+	DataResult<Car> getById(int carId);
 
-	Result Save(CreateCarRequest createCarRequest);
+	Result save(CreateCarRequest createCarRequest);
 
-	Result Update(UpdateCarRequest updateCarRequest);
+	Result update(UpdateCarRequest updateCarRequest);
 
-	Result Delete(DeleteCarRequest deleteCarRequest);
+	Result delete(DeleteCarRequest deleteCarRequest);
 
 	DataResult<List<CarSearchListDto>> getWithoutMaintenanceOfCar();
 

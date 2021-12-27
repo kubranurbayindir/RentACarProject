@@ -1,6 +1,5 @@
 package com.etiya.rentACarSpring.businnes.concretes;
 
-import com.etiya.rentACarSpring.businnes.abstracts.MessageService;
 import com.etiya.rentACarSpring.businnes.dtos.BrandSearchListDto;
 import com.etiya.rentACarSpring.core.utilities.results.*;
 
@@ -24,14 +23,12 @@ public class BrandManager implements BrandService {
 
     private BrandDao brandDao;
     private ModelMapperService modelMapperService;
-    private MessageService messageService;
 
     @Autowired
-    public BrandManager(BrandDao brandDao, ModelMapperService modelMapperService, MessageService messageService) {
+    public BrandManager(BrandDao brandDao, ModelMapperService modelMapperService) {
         super();
         this.brandDao = brandDao;
         this.modelMapperService = modelMapperService;
-        this.messageService = messageService;
     }
 
     @Override
@@ -55,7 +52,7 @@ public class BrandManager implements BrandService {
         Brand brand = modelMapperService.forRequest().map(createBrandRequest, Brand.class);
         this.brandDao.save(brand);
 
-        return new SuccesResult(messageService.getByEnglishMessageByMessageId(1));
+        return new SuccesResult();
     }
 
     @Override
@@ -67,7 +64,7 @@ public class BrandManager implements BrandService {
 
         Brand brand = modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
         this.brandDao.save(brand);
-        return new SuccesResult(messageService.getByEnglishMessageByMessageId(2));
+        return new SuccesResult();
     }
 
     @Override
@@ -78,7 +75,7 @@ public class BrandManager implements BrandService {
         }
 
         this.brandDao.deleteById(deleteBrandRequest.getBrandId());
-        return new SuccesResult(messageService.getByEnglishMessageByMessageId(3));
+        return new SuccesResult();
     }
 
 
@@ -92,7 +89,7 @@ public class BrandManager implements BrandService {
     private Result checkBrandNameDublicated(String brandName) {
         Brand brand = this.brandDao.getByBrandName(brandName);
         if (brand != null) {
-            return new ErrorResult(messageService.getByEnglishMessageByMessageId(4));
+            return new ErrorResult();
         }
 
         return new SuccesResult();

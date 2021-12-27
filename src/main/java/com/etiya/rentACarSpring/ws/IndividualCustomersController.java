@@ -40,17 +40,17 @@ public class IndividualCustomersController {
 	@PostMapping("add")
 	public Result add(@RequestBody @Valid CreateIndividualCustomerRequest createIndividualCustomerRequest) {
 
-		return this.individualCustomerService.Save(createIndividualCustomerRequest);
+		return this.individualCustomerService.save(createIndividualCustomerRequest);
 	}
 	
 	@PutMapping("update")
 	public Result update(@RequestBody @Valid UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
-		return this.individualCustomerService.Update(updateIndividualCustomerRequest);
+		return this.individualCustomerService.update(updateIndividualCustomerRequest);
 	}
 
 	@DeleteMapping("delete")
 	public Result delete(@RequestBody @Valid DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) {
-		return this.individualCustomerService.Delete(deleteIndividualCustomerRequest);
+		return this.individualCustomerService.delete(deleteIndividualCustomerRequest);
 	}
 
 }

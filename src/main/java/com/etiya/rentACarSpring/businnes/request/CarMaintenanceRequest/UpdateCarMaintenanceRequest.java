@@ -16,11 +16,7 @@ import lombok.NoArgsConstructor;
 public class UpdateCarMaintenanceRequest {
 	@NotNull
 	private int carMaintenanseId;
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@NotNull
-	private Date maintananceDate;
 	@NotNull
 	private Date returnDate;
-	@NotNull
-	private int carId;
+
 }

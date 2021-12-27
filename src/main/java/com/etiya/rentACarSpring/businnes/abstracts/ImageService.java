@@ -12,8 +12,8 @@ import com.etiya.rentACarSpring.core.utilities.results.Result;
 
 public interface ImageService {
 	DataResult<List<ImageSearchListDto>> getAll();	
-	Result Add(CreateImageRequest createImageRequest) throws IOException;
-	Result Update(UpdateImageRequest updateImageRequest) throws IOException;
-	Result Delete(DeleteImageRequest deleteImageRequest);
+	Result add(CreateImageRequest createImageRequest) throws IOException;
+	Result update(UpdateImageRequest updateImageRequest) throws IOException;
+	Result delete(DeleteImageRequest deleteImageRequest);
 	DataResult<List<ImageSearchListDto>> getCarImageDetailByCarId(int carId); 
 }

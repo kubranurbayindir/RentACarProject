@@ -45,7 +45,7 @@ public class CorparateCustomerManager implements CorparateCustomerService {
     }
 
     @Override
-    public Result Add(CreateCorparateRequest createCorparateRequest) {
+    public Result add(CreateCorparateRequest createCorparateRequest) {
         Result result = BusinnessRules.run(checkIfTaxNumberExists(createCorparateRequest.getTaxNumber()));
         if (result != null) {
             return result;

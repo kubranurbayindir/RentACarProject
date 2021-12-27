@@ -48,7 +48,7 @@ public class ImageManager implements ImageService {
     }
 
     @Override
-    public Result Add(CreateImageRequest createImageRequest) throws IOException {
+    public Result add(CreateImageRequest createImageRequest) throws IOException {
 
         var result = BusinnessRules.run(checkCarImagesCount(createImageRequest.getCarId(), 5),
                 this.fileHelper.checkImageType(createImageRequest.getFile()),
@@ -76,7 +76,7 @@ public class ImageManager implements ImageService {
     }
 
     @Override
-    public Result Update(UpdateImageRequest updateImageRequest) throws IOException {
+    public Result update(UpdateImageRequest updateImageRequest) throws IOException {
         Image image = this.imageDao.getById(updateImageRequest.getImageId());
 
         var result = BusinnessRules.run(checkCarImagesCount(image.getCar().getCarId(), 6),
@@ -132,7 +132,7 @@ public class ImageManager implements ImageService {
     }
 
     @Override
-    public Result Delete(DeleteImageRequest deleteImageRequest) {
+    public Result delete(DeleteImageRequest deleteImageRequest) {
         Image image = this.imageDao.getById(deleteImageRequest.getImageId());
 
         this.imageDao.delete(image);

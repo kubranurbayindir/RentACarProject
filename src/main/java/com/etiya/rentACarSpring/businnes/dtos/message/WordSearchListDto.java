@@ -1,4 +1,4 @@
-package com.etiya.rentACarSpring.businnes.dtos;
+package com.etiya.rentACarSpring.businnes.dtos.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,12 +9,9 @@ import javax.persistence.Column;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageSearchListDto {
+public class WordSearchListDto {
 
+    private int id;
 
-    private int messageId;
-
-    private String turkish;
-
-    private String english;
+    private String key;
 }

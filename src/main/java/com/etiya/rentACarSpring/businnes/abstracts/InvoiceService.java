@@ -12,9 +12,9 @@ import com.etiya.rentACarSpring.core.utilities.results.Result;
 
 public interface InvoiceService {
 	DataResult<List<InvoiceSearchListDto>> getAll();
-	Result Add(DropOffCarRequest dropOffCarRequest);
-	Result Update(UpdateInvoiceRequest updateInvoiceRequest);
-	Result Delete(DeleteInvoiceRequest deleteInvoiceRequest);
+	Result add(DropOffCarRequest dropOffCarRequest);
+	Result update(UpdateInvoiceRequest updateInvoiceRequest);
+	Result delete(DeleteInvoiceRequest deleteInvoiceRequest);
 	DataResult<List<InvoiceSearchListDto>> getInvoiceByDate(CreateInvoiceDateRequest createInvoiceDateRequest);
 	Integer rentOfTotalPrice(DropOffCarRequest dropOffCarRequest);
 }

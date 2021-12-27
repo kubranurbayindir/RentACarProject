@@ -56,7 +56,7 @@ public class AuthManager implements AuthService {
                 .map(individualRegisterRequest, CreateIndividualCustomerRequest.class);
 
         crateCreateIndividualCustomerRequest.setFindexScore(findexScoreService.getIndividualFindexScore(individualRegisterRequest.getIdentityNumber()));
-        this.individualCustomerService.Save(crateCreateIndividualCustomerRequest);
+        this.individualCustomerService.save(crateCreateIndividualCustomerRequest);
 
         return new SuccesResult(Messages.individualRegister);
     }
@@ -71,12 +71,12 @@ public class AuthManager implements AuthService {
         CreateCorparateRequest createCorparateRequest = modelMapperService.forRequest().map(corparateRegisterRequest,
                 CreateCorparateRequest.class);
         createCorparateRequest.setFindexScore(findexScoreService.getCorparateFindexScore(corparateRegisterRequest.getTaxNumber()));
-        this.corparateCustomerService.Add(createCorparateRequest);
+        this.corparateCustomerService.add(createCorparateRequest);
         return new SuccesResult(Messages.corparateRegister);
     }
 
     @Override
-    public Result Login(LoginRequest loginRequest) {
+    public Result login(LoginRequest loginRequest) {
         var result = BusinnessRules.run(checkCustomerEmailIsTrue(loginRequest), checkCustomerPasswordIsTrue(loginRequest));
 
         if (result != null) {

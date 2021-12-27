@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface CorparateCustomerService {
 	DataResult<List<CorparateCustomerSearchListDto>> getAll();
-	Result Add(CreateCorparateRequest createCorparateRequest);
+	Result add(CreateCorparateRequest createCorparateRequest);
 	Result update(UpdateCorparateRequest updateCorparateRequest);
 	Result delete(DeleteCorparateRequest deleteCorparateRequest);
 

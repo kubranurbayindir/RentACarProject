@@ -1,11 +1,8 @@
 package com.etiya.rentACarSpring.entities;
 
 import java.sql.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@PrimaryKeyJoinColumn(name = "user_id")
 @Table(name = "individualCustomers")
 public class IndividualCustomer extends User {
 	
@@ -28,11 +26,6 @@ public class IndividualCustomer extends User {
 	
 	@Column (name="birthday")
 	private Date birthday;  
-	
-	@OneToOne
-	@JoinColumn(name = "user_id")
-	private User user;
-	
 
 }
 

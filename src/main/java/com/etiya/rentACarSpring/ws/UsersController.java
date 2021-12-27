@@ -37,16 +37,16 @@ public class UsersController {
 	@PostMapping("add")
 	public Result add(@RequestBody @Valid CreateUserRequest createUserRequest) {
 
-		return this.userService.Add(createUserRequest);
+		return this.userService.add(createUserRequest);
 	}
 
 	@PutMapping("update")
 	public Result update(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
-		return this.userService.Update(updateUserRequest);
+		return this.userService.update(updateUserRequest);
 	}
 
 	@DeleteMapping("delete")
 	public Result delete(@RequestBody @Valid DeleteUserRequest deleteUserRequest) {
-		return this.userService.Delete(deleteUserRequest);
+		return this.userService.delete(deleteUserRequest);
 	}
 }

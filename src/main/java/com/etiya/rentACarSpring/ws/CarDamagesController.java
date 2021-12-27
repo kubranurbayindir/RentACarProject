@@ -38,7 +38,7 @@ public class CarDamagesController {
         return this.carDamageService.update(updateCarDamageRequest);
     }
 
-    @DeleteMapping("delete")
+     @DeleteMapping("delete")
     public Result delete(@RequestBody @Valid DeleteCarDamageRequest deleteCarDamageRequest) {
         return this.carDamageService.delete(deleteCarDamageRequest);
     }

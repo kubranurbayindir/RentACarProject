@@ -45,21 +45,21 @@ public class UserManager implements UserService {
     }
 
     @Override
-    public Result Add(CreateUserRequest createUserRequest) {
+    public Result add(CreateUserRequest createUserRequest) {
         User user = modelMapperService.forRequest().map(createUserRequest, User.class);
         this.userDao.save(user);
         return new SuccesResult("Ekleme İslemi Basarili");
     }
 
     @Override
-    public Result Update(UpdateUserRequest updateUserRequest) {
+    public Result update(UpdateUserRequest updateUserRequest) {
         User user = modelMapperService.forRequest().map(updateUserRequest, User.class);
         this.userDao.save(user);
         return new SuccesResult("Guncelleme İslemi Basarili");
     }
 
     @Override
-    public Result Delete(DeleteUserRequest deleteUserRequest) {
+    public Result delete(DeleteUserRequest deleteUserRequest) {
         this.userDao.deleteById(deleteUserRequest.getUserId());
         return new SuccesResult("Silme İslemi Basarili");
     }

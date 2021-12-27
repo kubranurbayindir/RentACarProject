@@ -46,7 +46,7 @@ public class ImagesController {
 		createImageRequest.setCarId(carId);
 		createImageRequest.setFile(file);
 
-		return this.imageService.Add(createImageRequest);
+		return this.imageService.add(createImageRequest);
 	}
 	
 	@GetMapping("/getCarImageDetailByCarId")
@@ -56,7 +56,7 @@ public class ImagesController {
 	
 	@DeleteMapping("/delete")
 	public Result delete(@Valid DeleteImageRequest deleteImageRequest) {
-		return this.imageService.Delete(deleteImageRequest);
+		return this.imageService.delete(deleteImageRequest);
 	}
 	
 	@PutMapping("/update")
@@ -67,6 +67,6 @@ public class ImagesController {
 		updateImageRequest.setImageId(carImageId);
 		updateImageRequest.setFile(file);
 
-		return this.imageService.Update(updateImageRequest);
+		return this.imageService.update(updateImageRequest);
 	}
 }

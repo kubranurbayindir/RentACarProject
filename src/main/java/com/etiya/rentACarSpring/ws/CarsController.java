@@ -77,16 +77,16 @@ public class CarsController {
 	@PostMapping("add")
 	public Result add(@RequestBody @Valid CreateCarRequest createCarRequest) {
 
-		return this.carService.Save(createCarRequest);
+		return this.carService.save(createCarRequest);
 	}
 
 	@PutMapping("update")
 	public Result update(@RequestBody @Valid UpdateCarRequest updateCarRequest) {
-		return this.carService.Update(updateCarRequest);
+		return this.carService.update(updateCarRequest);
 	}
 
 	@DeleteMapping("delete")
 	public Result delete(@RequestBody @Valid DeleteCarRequest deleteCarRequest) {
-		return this.carService.Delete(deleteCarRequest);
+		return this.carService.delete(deleteCarRequest);
 	}
 }

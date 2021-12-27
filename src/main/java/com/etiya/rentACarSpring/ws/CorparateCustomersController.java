@@ -33,7 +33,7 @@ public class CorparateCustomersController {
 	
 	@PostMapping("add")
 	public Result add(@RequestBody @Valid CreateCorparateRequest createCorparateRequest) {
-		return this.corparateCustomerService.Add(createCorparateRequest);
+		return this.corparateCustomerService.add(createCorparateRequest);
 	}
 
 	@PutMapping("update")

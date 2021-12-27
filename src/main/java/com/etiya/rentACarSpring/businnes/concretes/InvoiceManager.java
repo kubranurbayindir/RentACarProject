@@ -53,7 +53,7 @@ public class InvoiceManager implements InvoiceService {
     }
 
     @Override
-    public Result Add(DropOffCarRequest dropOffCarRequest) {
+    public Result add(DropOffCarRequest dropOffCarRequest) {
         Result rules = BusinnessRules.run(ifExistRentalIdOnInvoice(dropOffCarRequest.getRentalId())
         );
 
@@ -71,7 +71,7 @@ public class InvoiceManager implements InvoiceService {
     }
 
     @Override
-    public Result Update(UpdateInvoiceRequest updateInvoiceRequest) {
+    public Result update(UpdateInvoiceRequest updateInvoiceRequest) {
         Result rules = BusinnessRules.run(ifExistRentalIdOnInvoice(updateInvoiceRequest.getRentalId())
         );
 
@@ -84,7 +84,7 @@ public class InvoiceManager implements InvoiceService {
     }
 
     @Override
-    public Result Delete(DeleteInvoiceRequest deleteInvoiceRequest) {
+    public Result delete(DeleteInvoiceRequest deleteInvoiceRequest) {
         this.invoiceDao.deleteById(deleteInvoiceRequest.getInvoiceId());
         return new SuccesResult(Messages.deleteInvoice);
 
@@ -109,7 +109,7 @@ public class InvoiceManager implements InvoiceService {
     }
 
     private DataResult<Integer> ifCarReturnedToDifferentCity(int rentalId, int returnCityId) {
-        if (this.rentalService.getById(rentalId).getTakeCity() != this.cityService.getbyId(returnCityId).getData())
+        if (this.rentalService.getById(rentalId).getTakeCity() != this.cityService.getById(returnCityId).getData())
             return new SuccesDataResult<>(500);
         return new SuccesDataResult<>(0);
     }

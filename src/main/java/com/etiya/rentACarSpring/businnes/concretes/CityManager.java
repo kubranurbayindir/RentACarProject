@@ -78,7 +78,7 @@ public class CityManager implements CityService {
     }
 
     @Override
-    public DataResult<City> getbyId(int cityId) {
+    public DataResult<City> getById(int cityId) {
         return new SuccesDataResult<City>(this.cityDao.getById(cityId));
     }
 

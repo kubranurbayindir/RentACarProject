@@ -13,13 +13,13 @@ import com.etiya.rentACarSpring.entities.CarMaintenance;
 public interface CarMaintenanceService {
 	DataResult<List<CarMaintenanceSearchListDto>> getAll();
 
-	Result Add(CreateCarMaintenanceRequest createCarMaintenanceRequest);
+	Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest);
 
-	Result Update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest);
+	Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest);
 
-	Result Delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest);
+	Result delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest);
 
-	DataResult<CarMaintenance> getbyId(int carId);
+	DataResult<CarMaintenance> getById(int carId);
 
-	Result CheckIfCarIsAtMaintenance(int carId);
+	Result checkIfCarIsAtMaintenance(int carId);
 }

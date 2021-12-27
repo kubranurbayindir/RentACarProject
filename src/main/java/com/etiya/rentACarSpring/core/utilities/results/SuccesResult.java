@@ -10,5 +10,4 @@ public class SuccesResult extends Result {
 		super(true, message);
 	}
 
-	
 }

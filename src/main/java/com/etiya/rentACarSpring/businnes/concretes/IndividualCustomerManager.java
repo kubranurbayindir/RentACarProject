@@ -50,7 +50,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
     }
 
     @Override
-    public Result Save(CreateIndividualCustomerRequest createIndividualCustomerRequest) {
+    public Result save(CreateIndividualCustomerRequest createIndividualCustomerRequest) {
         IndividualCustomer individualCustomer = modelMapperService.forRequest().map(createIndividualCustomerRequest, IndividualCustomer.class);
         individualCustomer.setFindexScore(findexScoreService.getIndividualFindexScore(individualCustomer.getIdentityNumber()));
         this.individualCustomerDao.save(individualCustomer);
@@ -58,7 +58,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
     }
 
     @Override
-    public Result Update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
+    public Result update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
         IndividualCustomer individualCustomer = modelMapperService.forRequest().map(updateIndividualCustomerRequest, IndividualCustomer.class);
         individualCustomer.setFindexScore(findexScoreService.getIndividualFindexScore(individualCustomer.getIdentityNumber()));
         this.individualCustomerDao.save(individualCustomer);
@@ -66,7 +66,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
     }
 
     @Override
-    public Result Delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) {
+    public Result delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) {
         this.individualCustomerDao.deleteById(deleteIndividualCustomerRequest.getIndividualCustomersId());
         return new SuccesResult("Silme İslemi Basarili");
     }

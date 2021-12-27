@@ -12,9 +12,9 @@ import com.etiya.rentACarSpring.core.utilities.results.Result;
 public interface IndividualCustomerService {
 	DataResult<List<IndividualCustomerSearchListDto>> getAll();
 
-	Result Save(CreateIndividualCustomerRequest createIndividualCustomerRequest);
+	Result save(CreateIndividualCustomerRequest createIndividualCustomerRequest);
 
-	Result Update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest);
+	Result update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest);
 
-	Result Delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest);
+	Result delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest);
 }

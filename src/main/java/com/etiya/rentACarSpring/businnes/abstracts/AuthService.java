@@ -9,6 +9,6 @@ public interface AuthService {
 	
 	Result individualRegister(IndividualRegisterRequest individualRegisterRequest);
 	Result corparateRegister(CorparateRegisterRequest corparateRegisterRequest);	
-	Result Login(LoginRequest loginRequest);
+	Result login(LoginRequest loginRequest);
 	Result checkCustomerEmailIsTrue(LoginRequest loginRequest);
 }
