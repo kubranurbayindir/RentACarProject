@@ -57,7 +57,7 @@ public class CarManager implements CarService {
         Car car = modelMapperService.forRequest().map(createCarRequest, Car.class);
         car.setFindexScore(findexScoreService.sendCarFindexScore());
         this.carDao.save(car);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(1,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId("car_added",Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override

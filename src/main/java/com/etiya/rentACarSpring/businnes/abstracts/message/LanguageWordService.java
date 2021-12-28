@@ -6,6 +6,7 @@ import com.etiya.rentACarSpring.businnes.request.MessageRequest.LanguageWordRequ
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.LanguageWordRequest.UpdateLanguageWordRequest;
 import com.etiya.rentACarSpring.core.utilities.results.DataResult;
 import com.etiya.rentACarSpring.core.utilities.results.Result;
+import com.etiya.rentACarSpring.entities.message.LanguageWord;
 import org.springframework.core.env.Environment;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface LanguageWordService {
     Result update(UpdateLanguageWordRequest updateLanguageWordRequest);
     Result delete(DeleteLanguageWordRequest deleteLanguageWordRequest);
 
-    String getByLanguageAndKeyId(int wordId, int language);
+    String getByLanguageAndKeyId(String key, int language);
 }

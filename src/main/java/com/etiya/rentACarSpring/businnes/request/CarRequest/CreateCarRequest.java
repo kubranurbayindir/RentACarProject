@@ -29,7 +29,10 @@ public class CreateCarRequest {
 
 	@NotNull
 	private int cityId;
-	
+
+	@NotNull
+	private int modelYear;
+
 	@NotNull
 	@Min(100)	
 	private int dailyPrice;

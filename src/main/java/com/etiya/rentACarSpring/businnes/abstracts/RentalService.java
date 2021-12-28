@@ -20,7 +20,6 @@ public interface RentalService {
 	Rental getById(int rentalId);
 	Integer sumAdditionalServicePriceByRentalId(int rentalId);
 	Result dropOffCar(DropOffCarRequest dropOffCarRequest);
-
 	DataResult<Integer> getDailyPriceOfRentedCar(int rentalId);
 	Result checkIfRentalExists(int rentalId);
 }

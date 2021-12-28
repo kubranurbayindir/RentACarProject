@@ -1,5 +1,6 @@
 package com.etiya.rentACarSpring.businnes.concretes;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,12 +92,15 @@ public class RentalManager implements RentalService {
 
     @Override
     public Result dropOffCar(DropOffCarRequest dropOffCarRequest) {
+
+        Rental result = this.rentalDao.getByRentalId(dropOffCarRequest.getRentalId());
+
         Result rules = BusinnessRules.run(checkCreditCardBalance(dropOffCarRequest,
                         dropOffCarRequest.getCreditCardRentalRequest()),
                 checkReturnDate(dropOffCarRequest.getRentalId()),
                 creditcardService.checkIfCreditCardCvvFormatIsTrue(dropOffCarRequest.getCreditCardRentalRequest().getCvv()),
-                creditcardService.checkIfCreditCardFormatIsTrue(dropOffCarRequest.getCreditCardRentalRequest().getCardNumber())
-
+                creditcardService.checkIfCreditCardFormatIsTrue(dropOffCarRequest.getCreditCardRentalRequest().getCardNumber()),
+                checkDate(result.getRentDate(), dropOffCarRequest.getReturnDate())
         );
 
         if (rules != null) {
@@ -104,20 +108,20 @@ public class RentalManager implements RentalService {
         }
 
         Rental rental = modelMapperService.forRequest().map(dropOffCarRequest, Rental.class);
-        Rental result = this.rentalDao.getByRentalId(dropOffCarRequest.getRentalId());
+
         rental.setRentalId(result.getRentalId());
         rental.setRentDate(result.getRentDate());
         rental.setTakeCity(result.getTakeCity());
         rental.setUser(result.getUser());
         rental.setCar(result.getCar());
 
-        this.rentalDao.save(rental);
-
-        this.invoiceService.add(dropOffCarRequest);
-
         var car = this.carService.getById(rental.getCar().getCarId()).getData();
         car.setKilometer(rental.getReturnKilometer());
         car.setCity(rental.getReturnCity());
+
+        this.invoiceService.add(dropOffCarRequest);
+        this.rentalDao.save(rental);
+
 
         return new SuccesResult("Araç kiradan döndü ve fatura oluşturuldu.");
     }
@@ -130,7 +134,6 @@ public class RentalManager implements RentalService {
         if (rules != null) {
             return rules;
         }
-
 
         this.rentalDao.deleteById(deleteRentalRequest.getRentalId());
         return new SuccesResult(Messages.deletedRental);
@@ -217,5 +220,17 @@ public class RentalManager implements RentalService {
         return new SuccesResult();
     }
 
+    private Result checkDate(Date rentalDate, Date returnDate){
+        if (rentalDate.compareTo(returnDate)<0){
+            return new SuccesResult();
+        }
+        return new ErrorResult("Kiraya yollama tarihi dönüş tarihinden önceki bir tarih olamaz.");
+    }
 
+    private  Result checkKilometer(int Kilometer,int returnKilometer){
+        if (Kilometer<returnKilometer){
+            return new SuccesResult();
+        }
+        return new ErrorResult("Geri Dönüş Kilometresi İlk kilometreden kücük olamaz");
+    }
 }

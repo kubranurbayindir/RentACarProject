@@ -96,7 +96,12 @@ public class RentACarSpringApplication {
 		return  error;
 	}
 
-
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public  ErrorResult DataIntegrityViolationException(DataIntegrityViolationException exception){
+		ErrorResult error=new ErrorResult("Bu veri başka bir tabloda kullanılmaktadır veya herhangi bir tabloda bulunmamaktadır.");
+		return  error;
+	}
 
 
 

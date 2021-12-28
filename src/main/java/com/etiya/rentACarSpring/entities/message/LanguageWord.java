@@ -29,4 +29,5 @@ public class LanguageWord {
     @JoinColumn(name = "wordId")
     private Word word;
 
+
 }

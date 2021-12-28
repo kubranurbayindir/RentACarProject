@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CarMaintenanceSearchListDto {
 
-	private int carMaintenanseId;
+	private int carMaintenanceId;
 
 	private Date maintananceDate;
 

@@ -7,10 +7,7 @@ import com.etiya.rentACarSpring.businnes.request.MessageRequest.WordRequest.Crea
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.WordRequest.DeleteWordRequest;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.WordRequest.UpdateWordRequest;
 import com.etiya.rentACarSpring.core.utilities.mapping.ModelMapperService;
-import com.etiya.rentACarSpring.core.utilities.results.DataResult;
-import com.etiya.rentACarSpring.core.utilities.results.Result;
-import com.etiya.rentACarSpring.core.utilities.results.SuccesDataResult;
-import com.etiya.rentACarSpring.core.utilities.results.SuccesResult;
+import com.etiya.rentACarSpring.core.utilities.results.*;
 import com.etiya.rentACarSpring.dataAccess.abstracts.message.WordDao;
 import com.etiya.rentACarSpring.entities.message.Word;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,4 +57,15 @@ public class WordManager implements WordService {
         this.wordDao.deleteById(deleteWordRequest.getWordId());
         return new SuccesResult();
     }
+    @Override
+    public Result checkWordExists(int wordId){
+        if (this.wordDao.existsById(wordId)) {
+            return new SuccesResult();
+        }
+        return new ErrorResult("hata");
+    }
 }
+
+
+
+

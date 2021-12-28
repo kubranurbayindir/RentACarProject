@@ -25,10 +25,10 @@ public class CarMaintenance {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "car_maintenance_id")
-	private int carMaintenanseId;
+	private int carMaintenanceId;
 	
 	@Column (name ="maintenance_date")
-	private Date maintananceDate; 
+	private Date maintananceDate;
 
 	@Column (name="return_date")
 	private Date returnDate;

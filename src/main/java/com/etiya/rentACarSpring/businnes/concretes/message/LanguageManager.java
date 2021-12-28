@@ -6,13 +6,11 @@ import com.etiya.rentACarSpring.businnes.request.MessageRequest.LanguageRequest.
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.LanguageRequest.DeleteLanguageRequest;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.LanguageRequest.UpdateLanguageRequest;
 import com.etiya.rentACarSpring.core.utilities.mapping.ModelMapperService;
-import com.etiya.rentACarSpring.core.utilities.results.DataResult;
-import com.etiya.rentACarSpring.core.utilities.results.Result;
-import com.etiya.rentACarSpring.core.utilities.results.SuccesDataResult;
-import com.etiya.rentACarSpring.core.utilities.results.SuccesResult;
+import com.etiya.rentACarSpring.core.utilities.results.*;
 import com.etiya.rentACarSpring.dataAccess.abstracts.message.LanguageDao;
 import com.etiya.rentACarSpring.entities.message.Language;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +21,13 @@ public class LanguageManager implements LanguageService {
 
     private LanguageDao languageDao;
     private ModelMapperService modelMapperService;
+    private Environment environment;
 
     @Autowired
-    public LanguageManager(LanguageDao languageDao,ModelMapperService modelMapperService) {
+    public LanguageManager(LanguageDao languageDao,ModelMapperService modelMapperService,Environment environment) {
         this.languageDao = languageDao;
         this.modelMapperService=modelMapperService;
+        this.environment=environment;
     }
 
     @Override
@@ -60,4 +60,16 @@ public class LanguageManager implements LanguageService {
         this.languageDao.deleteById(deleteLanguageRequest.getLanguageId());
         return new SuccesResult();
     }
+
+    public Result checkLanguageExists(int languageId) {
+        if (this.languageDao.existsById(languageId)) {
+            return new SuccesResult();
+        } else if (Integer.parseInt(this.environment.getProperty("language")) != languageId) {
+            languageId=1;
+            return new SuccesResult();
+        } else {
+            return new ErrorResult("hata");
+        }
+    }
+
 }
