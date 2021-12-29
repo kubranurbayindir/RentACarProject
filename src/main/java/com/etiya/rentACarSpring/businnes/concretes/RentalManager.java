@@ -95,6 +95,8 @@ public class RentalManager implements RentalService {
 
         Rental result = this.rentalDao.getByRentalId(dropOffCarRequest.getRentalId());
 
+        Rental rental = modelMapperService.forRequest().map(dropOffCarRequest, Rental.class);
+
         Result rules = BusinnessRules.run(checkCreditCardBalance(dropOffCarRequest,
                         dropOffCarRequest.getCreditCardRentalRequest()),
                 checkReturnDate(dropOffCarRequest.getRentalId()),
@@ -107,7 +109,6 @@ public class RentalManager implements RentalService {
             return rules;
         }
 
-        Rental rental = modelMapperService.forRequest().map(dropOffCarRequest, Rental.class);
 
         rental.setRentalId(result.getRentalId());
         rental.setRentDate(result.getRentDate());
