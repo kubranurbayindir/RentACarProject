@@ -22,4 +22,5 @@ public interface RentalService {
 	Result dropOffCar(DropOffCarRequest dropOffCarRequest);
 	DataResult<Integer> getDailyPriceOfRentedCar(int rentalId);
 	Result checkIfRentalExists(int rentalId);
+	public Result checkReturnDate(int rentalId);
 }

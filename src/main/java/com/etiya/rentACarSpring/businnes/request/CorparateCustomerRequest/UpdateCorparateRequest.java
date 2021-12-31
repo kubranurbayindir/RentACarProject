@@ -3,6 +3,7 @@ package com.etiya.rentACarSpring.businnes.request.CorparateCustomerRequest;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ public class UpdateCorparateRequest {
 	@NotNull
 	private String companyName;
 	@NotNull
+	@Pattern(regexp="^[0-9]{10}$",message="Vergi no hatalı veya eksik. Lütfen kontrol ediniz.")
 	private String taxNumber;
 	@NotNull
 	@Email

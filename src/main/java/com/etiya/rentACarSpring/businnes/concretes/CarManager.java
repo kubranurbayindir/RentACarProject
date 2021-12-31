@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.etiya.rentACarSpring.businnes.abstracts.message.LanguageService;
 import com.etiya.rentACarSpring.businnes.abstracts.message.LanguageWordService;
+import com.etiya.rentACarSpring.businnes.constants.Messages;
 import com.etiya.rentACarSpring.core.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -49,7 +50,7 @@ public class CarManager implements CarService {
         List<CarSearchListDto> response = result.stream()
                 .map(car -> modelMapperService.forDto().map(car, CarSearchListDto.class)).collect(Collectors.toList());
 
-        return new SuccesDataResult<List<CarSearchListDto>>(response);
+        return new SuccesDataResult<List<CarSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.CarListed,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
@@ -57,21 +58,21 @@ public class CarManager implements CarService {
         Car car = modelMapperService.forRequest().map(createCarRequest, Car.class);
         car.setFindexScore(findexScoreService.sendCarFindexScore());
         this.carDao.save(car);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId("car_added",Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CarAdded,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
     public Result update(UpdateCarRequest updateCarRequest) {
         Car car = modelMapperService.forRequest().map(updateCarRequest, Car.class);
         this.carDao.save(car);
-        return new SuccesResult();
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CarUpdated,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
     public Result delete(DeleteCarRequest deleteCarRequest) {
 
         this.carDao.deleteById(deleteCarRequest.getCarId());
-        return new SuccesResult();
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CarDeleted,Integer.parseInt(environment.getProperty("language"))));
 
     }
 
@@ -81,7 +82,7 @@ public class CarManager implements CarService {
         List<CarSearchListDto> response = this.carDao.getByDailyPrice(dailyPrice).stream()
                 .map(car -> modelMapperService.forDto().map(car, CarSearchListDto.class)).collect(Collectors.toList());
 
-        return new SuccesDataResult<List<CarSearchListDto>>(response);
+        return new SuccesDataResult<List<CarSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.CarByDailyPriceListed,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
@@ -89,7 +90,7 @@ public class CarManager implements CarService {
 
         List<CarDetail> response = this.carDao.getCarWithBrandAndColorDetails();
 
-        return new SuccesDataResult<List<CarDetail>>(response);
+        return new SuccesDataResult<List<CarDetail>>(response, languageWordService.getByLanguageAndKeyId(Messages.CarDetailedListed,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
@@ -98,7 +99,7 @@ public class CarManager implements CarService {
                 .map(car -> modelMapperService.forDto().map(car, CarDetailForColorAndBrand.class))
                 .collect(Collectors.toList());
 
-        return new SuccesDataResult<List<CarDetailForColorAndBrand>>(response);
+        return new SuccesDataResult<List<CarDetailForColorAndBrand>>(response, languageWordService.getByLanguageAndKeyId(Messages.CarByColorIdListed,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
@@ -107,7 +108,7 @@ public class CarManager implements CarService {
                 .map(car -> modelMapperService.forDto().map(car, CarDetailForColorAndBrand.class))
                 .collect(Collectors.toList());
 
-        return new SuccesDataResult<List<CarDetailForColorAndBrand>>(response);
+        return new SuccesDataResult<List<CarDetailForColorAndBrand>>(response, languageWordService.getByLanguageAndKeyId(Messages.CarByBrandIdListed,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
@@ -116,7 +117,7 @@ public class CarManager implements CarService {
                 .map(car -> modelMapperService.forDto().map(car, CarDetailForColorAndBrand.class))
                 .collect(Collectors.toList());
 
-        return new SuccesDataResult<List<CarDetailForColorAndBrand>>(response);
+        return new SuccesDataResult<List<CarDetailForColorAndBrand>>(response, languageWordService.getByLanguageAndKeyId(Messages.CarByCarIdListed,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
@@ -129,7 +130,7 @@ public class CarManager implements CarService {
         List<CarSearchListDto> result = this.carDao.getAllWithoutMaintenanceOfCar();
         List<CarSearchListDto> response = result.stream()
                 .map(car -> modelMapperService.forDto().map(car, CarSearchListDto.class)).collect(Collectors.toList());
-        return new SuccesDataResult<List<CarSearchListDto>>(response);
+        return new SuccesDataResult<List<CarSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.CarWithoutMaintenanceListed,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
@@ -137,15 +138,15 @@ public class CarManager implements CarService {
         List<CarSearchListDto> response = this.carDao.getByCity_CityId(cityId).stream()
                 .map(car -> modelMapperService.forDto().map(car, CarSearchListDto.class)).collect(Collectors.toList());
 
-        return new SuccesDataResult<List<CarSearchListDto>>(response);
+        return new SuccesDataResult<List<CarSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.CarByCityIdListed,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
     public Result checkCarExistsInGallery(int id) {
-        if (this.carDao.existsById(id)) {
-            return new SuccesResult();
+        if (!this.carDao.existsById(id)) {
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CarNotFound,Integer.parseInt(environment.getProperty("language"))));
         }
-        return new ErrorResult();
+        return new SuccesResult();
     }
 
 }

@@ -35,76 +35,71 @@ import javax.persistence.EntityNotFoundException;
 @RestControllerAdvice
 public class RentACarSpringApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(RentACarSpringApplication.class, args);
-	}
-	
-	@Bean
-    public Docket api() { 
-        return new Docket(DocumentationType.SWAGGER_2)  
-          .select()                                  
-          .apis(RequestHandlerSelectors.basePackage("com.etiya.rentACarSpring"))                                     
-          .build();                                           
+    public static void main(String[] args) {
+        SpringApplication.run(RentACarSpringApplication.class, args);
     }
-	
-	@Bean 
-	public ModelMapper getModelMapper() {
-		ModelMapper modelMapper=new ModelMapper();
-		return modelMapper;
-	}
-	
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorDataResult<Object> handleValidationException(MethodArgumentNotValidException excepiton){
-		Map<String,String> validationErrors=new HashMap<String, String>();
-		
-		for(FieldError fieldError:excepiton.getBindingResult().getFieldErrors()) {
-			validationErrors.put(fieldError.getField(),fieldError.getDefaultMessage());
-		}
-		ErrorDataResult<Object> error=new ErrorDataResult<Object>(validationErrors,"Validation Error");
-		return error;
-	}
-	
-	@ExceptionHandler
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorResult handleNoSuchElementException(NoSuchElementException exception){
-		
-		ErrorResult error = new ErrorResult("Kayıt bulunamadı.");
-		return error;
-	}
 
-	@ExceptionHandler(EntityNotFoundException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public  ErrorResult handleEntityNotFoundException(EntityNotFoundException exception){
-		ErrorResult error=new ErrorResult("Böyle bir kayıt bulunmamaktadır.");
-		return  error;
-	}
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.etiya.rentACarSpring"))
+                .build();
+    }
 
-	@ExceptionHandler(EmptyResultDataAccessException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public  ErrorResult EmptyResultDataAccessException(EmptyResultDataAccessException exception){
-		ErrorResult error=new ErrorResult("Böyle bir kayıt bulunmamaktadır.");
-		return  error;
-	}
+    @Bean
+    public ModelMapper getModelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper;
+    }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDataResult<Object> handleValidationException(MethodArgumentNotValidException excepiton) {
+        Map<String, String> validationErrors = new HashMap<String, String>();
 
+        for (FieldError fieldError : excepiton.getBindingResult().getFieldErrors()) {
+            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+        ErrorDataResult<Object> error = new ErrorDataResult<Object>(validationErrors, "Validation Error");
+        return error;
+    }
 
-	@ExceptionHandler(HttpMessageNotReadableException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public  ErrorResult EmptyResultDataAccessException(HttpMessageNotReadableException exception){
-		ErrorResult error=new ErrorResult("Veri girişi yapılırken Json formatında hata oluştu.");
-		return  error;
-	}
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult handleNoSuchElementException(NoSuchElementException exception) {
 
-	@ExceptionHandler(DataIntegrityViolationException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public  ErrorResult DataIntegrityViolationException(DataIntegrityViolationException exception){
-		ErrorResult error=new ErrorResult("Bu veri başka bir tabloda kullanılmaktadır veya herhangi bir tabloda bulunmamaktadır.");
-		return  error;
-	}
+        ErrorResult error = new ErrorResult("Kayıt bulunamadı.");
+        return error;
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult handleEntityNotFoundException(EntityNotFoundException exception) {
+        ErrorResult error = new ErrorResult("Böyle bir kayıt bulunmamaktadır.");
+        return error;
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult EmptyResultDataAccessException(EmptyResultDataAccessException exception) {
+        ErrorResult error = new ErrorResult("Böyle bir kayıt bulunmamaktadır.");
+        return error;
+
+    }
 
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult EmptyResultDataAccessException(HttpMessageNotReadableException exception) {
+        ErrorResult error = new ErrorResult("Veri girişi yapılırken Json formatında hata oluştu.");
+        return error;
+    }
 
-	
-
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult DataIntegrityViolationException(DataIntegrityViolationException exception) {
+        ErrorResult error = new ErrorResult("Bu veri başka bir tabloda kullanılmaktadır veya herhangi bir tabloda bulunmamaktadır.");
+        return error;
+    }
 }

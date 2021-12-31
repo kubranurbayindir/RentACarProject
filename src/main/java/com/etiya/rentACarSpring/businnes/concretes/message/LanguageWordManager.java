@@ -3,6 +3,7 @@ package com.etiya.rentACarSpring.businnes.concretes.message;
 import com.etiya.rentACarSpring.businnes.abstracts.message.LanguageService;
 import com.etiya.rentACarSpring.businnes.abstracts.message.LanguageWordService;
 import com.etiya.rentACarSpring.businnes.abstracts.message.WordService;
+import com.etiya.rentACarSpring.businnes.constants.Messages;
 import com.etiya.rentACarSpring.businnes.dtos.message.LanguageWordSearchListDto;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.LanguageWordRequest.CreateLanguageWordRequest;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.LanguageWordRequest.DeleteLanguageWordRequest;
@@ -16,6 +17,7 @@ import com.etiya.rentACarSpring.entities.message.LanguageWord;
 import com.etiya.rentACarSpring.entities.message.Word;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,14 +35,17 @@ public class LanguageWordManager implements LanguageWordService {
     private ModelMapperService modelMapperService;
     private LanguageService languageService;
     private WordService wordService;
+    private Environment environment;
+
 
     @Autowired
     public LanguageWordManager(LanguageWordDao languageWordDao, ModelMapperService modelMapperService
-            , LanguageService languageService, WordService wordService) {
+            , LanguageService languageService, WordService wordService, Environment environment) {
         this.languageWordDao = languageWordDao;
         this.modelMapperService = modelMapperService;
         this.languageService = languageService;
         this.wordService = wordService;
+        this.environment=environment;
     }
 
     @Override
@@ -49,14 +54,14 @@ public class LanguageWordManager implements LanguageWordService {
         List<LanguageWordSearchListDto> response = result.stream()
                 .map(languageWord -> modelMapperService.forDto().map(languageWord, LanguageWordSearchListDto.class)).collect(Collectors.toList());
 
-        return new SuccesDataResult<List<LanguageWordSearchListDto>>(response);
+        return new SuccesDataResult<List<LanguageWordSearchListDto>>(response, getByLanguageAndKeyId(Messages.LanguageWordListed,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
     public Result save(CreateLanguageWordRequest createLanguageWordRequest) {
         LanguageWord languageWord = modelMapperService.forRequest().map(createLanguageWordRequest, LanguageWord.class);
         this.languageWordDao.save(languageWord);
-        return new SuccesResult();
+        return new SuccesResult(getByLanguageAndKeyId(Messages.LanguageWordAdded,Integer.parseInt(environment.getProperty("language"))));
 
     }
 
@@ -64,19 +69,22 @@ public class LanguageWordManager implements LanguageWordService {
     public Result update(UpdateLanguageWordRequest updateLanguageWordRequest) {
         LanguageWord languageWord = modelMapperService.forRequest().map(updateLanguageWordRequest, LanguageWord.class);
         this.languageWordDao.save(languageWord);
-        return new SuccesResult();
+        return new SuccesResult(getByLanguageAndKeyId(Messages.LanguageWordUpdated,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
     public Result delete(DeleteLanguageWordRequest deleteLanguageWordRequest) {
         this.languageWordDao.deleteById(deleteLanguageWordRequest.getId());
-        return new SuccesResult();
+        return new SuccesResult(getByLanguageAndKeyId(Messages.LanguageWordDeleted,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
     public String getByLanguageAndKeyId(String key, int language) {
         getDefaultLanguage();
         String messageContent=this.languageWordDao.getMessageByLanguageIdAndKey(key,this.languageId);
+        if (!wordService.checkKeyExists(key).isSuccess()){
+            return key;
+        }
         if (messageContent!=null){
             return messageContent;
         }
@@ -88,7 +96,4 @@ public class LanguageWordManager implements LanguageWordService {
             this.languageId=this.defaultLanguageId;
         }
     }
-
-
-
 }

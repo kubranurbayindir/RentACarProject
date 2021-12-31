@@ -6,4 +6,5 @@ import com.etiya.rentACarSpring.entities.Color;
 
 public interface ColorDao extends JpaRepository<Color, Integer>{
 
+    Color getColorByColorName(String colorName);
 }

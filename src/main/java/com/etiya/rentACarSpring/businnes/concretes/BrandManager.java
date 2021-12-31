@@ -1,9 +1,12 @@
 package com.etiya.rentACarSpring.businnes.concretes;
 
+import com.etiya.rentACarSpring.businnes.abstracts.message.LanguageWordService;
+import com.etiya.rentACarSpring.businnes.constants.Messages;
 import com.etiya.rentACarSpring.businnes.dtos.BrandSearchListDto;
 import com.etiya.rentACarSpring.core.utilities.results.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.etiya.rentACarSpring.businnes.abstracts.BrandService;
@@ -23,12 +26,17 @@ public class BrandManager implements BrandService {
 
     private BrandDao brandDao;
     private ModelMapperService modelMapperService;
+    private Environment environment;
+    private LanguageWordService languageWordService;
 
     @Autowired
-    public BrandManager(BrandDao brandDao, ModelMapperService modelMapperService) {
+    public BrandManager(BrandDao brandDao, ModelMapperService modelMapperService, Environment environment
+            ,LanguageWordService languageWordService) {
         super();
         this.brandDao = brandDao;
         this.modelMapperService = modelMapperService;
+        this.environment = environment;
+        this.languageWordService = languageWordService;
     }
 
     @Override
@@ -38,7 +46,7 @@ public class BrandManager implements BrandService {
                 .map(brand -> modelMapperService.forDto().map(brand, BrandSearchListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccesDataResult<List<BrandSearchListDto>>(response);
+        return new SuccesDataResult<List<BrandSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.BrandListed,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
@@ -52,7 +60,7 @@ public class BrandManager implements BrandService {
         Brand brand = modelMapperService.forRequest().map(createBrandRequest, Brand.class);
         this.brandDao.save(brand);
 
-        return new SuccesResult();
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.BrandAdded,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
@@ -64,7 +72,7 @@ public class BrandManager implements BrandService {
 
         Brand brand = modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
         this.brandDao.save(brand);
-        return new SuccesResult();
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.BrandUpdated,Integer.parseInt(environment.getProperty("language"))));
     }
 
     @Override
@@ -75,13 +83,13 @@ public class BrandManager implements BrandService {
         }
 
         this.brandDao.deleteById(deleteBrandRequest.getBrandId());
-        return new SuccesResult();
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.BrandDeleted,Integer.parseInt(environment.getProperty("language"))));
     }
 
 
     private Result checkIfBrandExists(int brandId) {
         if (!this.brandDao.existsById(brandId)) {
-            return new ErrorResult("brand Id bulunamadı");
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.BrandNotFound,Integer.parseInt(environment.getProperty("language"))));
         }
         return new SuccesResult();
     }
@@ -89,7 +97,7 @@ public class BrandManager implements BrandService {
     private Result checkBrandNameDublicated(String brandName) {
         Brand brand = this.brandDao.getByBrandName(brandName);
         if (brand != null) {
-            return new ErrorResult();
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.BrandNameDublicated,Integer.parseInt(environment.getProperty("language"))));
         }
 
         return new SuccesResult();

@@ -11,4 +11,5 @@ public interface AuthService {
 	Result corparateRegister(CorparateRegisterRequest corparateRegisterRequest);	
 	Result login(LoginRequest loginRequest);
 	Result checkCustomerEmailIsTrue(LoginRequest loginRequest);
+	Result checkEmailIfExists(String email);
 }

@@ -2,6 +2,7 @@ package com.etiya.rentACarSpring.businnes.concretes;
 
 
 import com.etiya.rentACarSpring.businnes.abstracts.AdditionalServiceService;
+import com.etiya.rentACarSpring.businnes.abstracts.message.LanguageWordService;
 import com.etiya.rentACarSpring.businnes.constants.Messages;
 import com.etiya.rentACarSpring.businnes.dtos.AdditionalServiceSearchListDto;
 import com.etiya.rentACarSpring.businnes.dtos.CarDamageSearchListDto;
@@ -16,6 +17,7 @@ import com.etiya.rentACarSpring.entities.AdditionalService;
 import com.etiya.rentACarSpring.entities.Brand;
 import com.etiya.rentACarSpring.entities.CarDamage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,11 +29,16 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
     private AdditionalServiceDao additionalServiceDao;
     private ModelMapperService modelMapperService;
+    private Environment environment;
+    private LanguageWordService languageWordService;
 
     @Autowired
-    public AdditionalServiceManager(AdditionalServiceDao additionalServiceDao, ModelMapperService modelMapperService) {
+    public AdditionalServiceManager(AdditionalServiceDao additionalServiceDao, ModelMapperService modelMapperService, Environment environment,
+                                    LanguageWordService languageWordService) {
         this.additionalServiceDao = additionalServiceDao;
         this.modelMapperService = modelMapperService;
+        this.environment = environment;
+        this.languageWordService = languageWordService;
     }
 
     @Override
@@ -43,7 +50,8 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
         AdditionalService additionalService = modelMapperService.forRequest().map(createAdditionalServiceRequest, AdditionalService.class);
         this.additionalServiceDao.save(additionalService);
-        return new SuccesResult("Eklendi");
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceAdded,Integer.parseInt(environment.getProperty("language"))));
+
     }
 
     @Override
@@ -56,7 +64,9 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
         AdditionalService additionalService = modelMapperService.forRequest().map(updateAdditionalServiceRequest, AdditionalService.class);
         this.additionalServiceDao.save(additionalService);
-        return new SuccesResult("güncellendi");
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceUpdated,Integer.parseInt(environment.getProperty("language"))));
+
+
     }
 
     @Override
@@ -68,7 +78,8 @@ public class AdditionalServiceManager implements AdditionalServiceService {
         }
 
         this.additionalServiceDao.deleteById(deleteAdditionalServiceRequest.getAdditionalServiceId());
-        return new SuccesResult("Silindi");
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceDeleted,Integer.parseInt(environment.getProperty("language"))));
+
     }
 
     @Override
@@ -77,13 +88,14 @@ public class AdditionalServiceManager implements AdditionalServiceService {
         List<AdditionalServiceSearchListDto> response = result.stream()
                 .map(additionalService -> modelMapperService.forDto().map(additionalService, AdditionalServiceSearchListDto.class))
                 .collect(Collectors.toList());
-        return new SuccesDataResult<List<AdditionalServiceSearchListDto>>(response);
+        return new SuccesDataResult<List<AdditionalServiceSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceListed,Integer.parseInt(environment.getProperty("language"))));
     }
 
     private Result checkAdditionalServiceNameDublicated(String additionalServiceName) {
         AdditionalService additionalService = this.additionalServiceDao.getByAdditionalServiceName(additionalServiceName.toLowerCase());
         if (additionalService != null) {
-            return new ErrorResult("Bu isime ait baska bir hizmet bulunmaktadır.");
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceDublicated,Integer.parseInt(environment.getProperty("language"))));
+
         }
         return new SuccesResult();
     }
@@ -91,7 +103,8 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
     public Result checkIfAdditionalServicexists(int additionalServiceId) {
         if (!this.additionalServiceDao.existsById(additionalServiceId)) {
-            return new ErrorResult("additionalServiceId  bulunamadı");
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceNotFound,Integer.parseInt(environment.getProperty("language"))));
+
         }
         return new SuccesResult();
     }

@@ -6,4 +6,5 @@ import com.etiya.rentACarSpring.entities.IndividualCustomer;
 
 public interface IndividualCustomerDao extends JpaRepository<IndividualCustomer, Integer> {
 
+    boolean existsByIdentityNumber(String identityNumber);
 }

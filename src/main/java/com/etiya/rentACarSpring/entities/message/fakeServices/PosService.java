@@ -1,4 +1,4 @@
-package com.etiya.rentACarSpring.fakeServices;
+package com.etiya.rentACarSpring.entities.message.fakeServices;
 
 public class PosService {
 

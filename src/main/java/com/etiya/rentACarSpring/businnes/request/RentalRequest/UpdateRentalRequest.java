@@ -16,21 +16,20 @@ import java.util.List;
 @NoArgsConstructor
 public class UpdateRentalRequest {
 
-    @NotNull
     private int rentalId;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date rentDate;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date returnDate;
-    @NotNull
+
     private String returnKilometer;
-    @NotNull
+
     private int car;
-    @NotNull
+
     private int user;
-    @NotNull
+
     private int takeCity;
-    @NotNull
+
     private int returnCity;
 
 

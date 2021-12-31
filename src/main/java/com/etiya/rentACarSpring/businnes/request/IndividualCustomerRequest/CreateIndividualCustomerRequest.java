@@ -4,6 +4,7 @@ import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -28,7 +29,7 @@ public class CreateIndividualCustomerRequest {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date birthday;
 	@NotNull
-	@Size(min=11,max=11)
+	@Pattern(regexp="^[1-9]{1}[0-9]{9}[02468]{1}$",message="Tc numaranızı hatalı veya eksik girdiniz lütfen kontrol ediniz.")
 	private String identityNumber;
 	@NotNull
 	private String email;
