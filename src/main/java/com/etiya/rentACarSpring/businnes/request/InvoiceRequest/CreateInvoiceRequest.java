@@ -33,7 +33,6 @@ public class CreateInvoiceRequest {
 	private Date rentDate;
 	@JsonIgnore
 	private Date returnDate;
-
 	@NotNull
 	private int rentalId;
 }

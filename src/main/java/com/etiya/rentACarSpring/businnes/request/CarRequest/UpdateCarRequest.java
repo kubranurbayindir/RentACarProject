@@ -28,4 +28,8 @@ public class UpdateCarRequest {
 	private String description;
 	@NotNull
 	private int kilometer;
+	@NotNull
+	private int cityId;
+	@NotNull
+	private int modelYear;
 }

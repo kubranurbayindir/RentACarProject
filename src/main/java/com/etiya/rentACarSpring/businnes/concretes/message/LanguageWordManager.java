@@ -54,32 +54,40 @@ public class LanguageWordManager implements LanguageWordService {
         List<LanguageWordSearchListDto> response = result.stream()
                 .map(languageWord -> modelMapperService.forDto().map(languageWord, LanguageWordSearchListDto.class)).collect(Collectors.toList());
 
-        return new SuccesDataResult<List<LanguageWordSearchListDto>>(response, getByLanguageAndKeyId(Messages.LanguageWordListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<LanguageWordSearchListDto>>(response, getByLanguageAndKeyId(Messages.LanguageWordListed));
     }
 
     @Override
     public Result save(CreateLanguageWordRequest createLanguageWordRequest) {
         LanguageWord languageWord = modelMapperService.forRequest().map(createLanguageWordRequest, LanguageWord.class);
         this.languageWordDao.save(languageWord);
-        return new SuccesResult(getByLanguageAndKeyId(Messages.LanguageWordAdded,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(getByLanguageAndKeyId(Messages.LanguageWordAdded));
 
     }
 
     @Override
     public Result update(UpdateLanguageWordRequest updateLanguageWordRequest) {
+        Result result = BusinnessRules.run(checkIfLanguageWordExists(updateLanguageWordRequest.getId()));
+        if (result != null) {
+            return result;
+        }
         LanguageWord languageWord = modelMapperService.forRequest().map(updateLanguageWordRequest, LanguageWord.class);
         this.languageWordDao.save(languageWord);
-        return new SuccesResult(getByLanguageAndKeyId(Messages.LanguageWordUpdated,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(getByLanguageAndKeyId(Messages.LanguageWordUpdated));
     }
 
     @Override
     public Result delete(DeleteLanguageWordRequest deleteLanguageWordRequest) {
+        Result result = BusinnessRules.run(checkIfLanguageWordExists(deleteLanguageWordRequest.getId()));
+        if (result != null) {
+            return result;
+        }
         this.languageWordDao.deleteById(deleteLanguageWordRequest.getId());
-        return new SuccesResult(getByLanguageAndKeyId(Messages.LanguageWordDeleted,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(getByLanguageAndKeyId(Messages.LanguageWordDeleted));
     }
 
     @Override
-    public String getByLanguageAndKeyId(String key, int language) {
+    public String getByLanguageAndKeyId(String key) {
         getDefaultLanguage();
         String messageContent=this.languageWordDao.getMessageByLanguageIdAndKey(key,this.languageId);
         if (!wordService.checkKeyExists(key).isSuccess()){
@@ -88,12 +96,19 @@ public class LanguageWordManager implements LanguageWordService {
         if (messageContent!=null){
             return messageContent;
         }
-        return this.languageWordDao.getMessageByLanguageIdAndKey(key, language);
+        return this.languageWordDao.getMessageByLanguageIdAndKey(key,this.languageId);
     }
 
     private void getDefaultLanguage(){
         if(!this.languageService.checkLanguageExists(this.languageId).isSuccess()){
             this.languageId=this.defaultLanguageId;
         }
+    }
+
+    public Result checkIfLanguageWordExists(int languageWordId) {
+        if (!this.languageWordDao.existsById(languageWordId)) {
+            return new ErrorResult(getByLanguageAndKeyId(Messages.LanguageWordNotFound));
+        }
+        return new SuccesResult();
     }
 }

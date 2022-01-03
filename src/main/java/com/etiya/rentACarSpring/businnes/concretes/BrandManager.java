@@ -26,16 +26,14 @@ public class BrandManager implements BrandService {
 
     private BrandDao brandDao;
     private ModelMapperService modelMapperService;
-    private Environment environment;
     private LanguageWordService languageWordService;
 
     @Autowired
-    public BrandManager(BrandDao brandDao, ModelMapperService modelMapperService, Environment environment
+    public BrandManager(BrandDao brandDao, ModelMapperService modelMapperService
             ,LanguageWordService languageWordService) {
         super();
         this.brandDao = brandDao;
         this.modelMapperService = modelMapperService;
-        this.environment = environment;
         this.languageWordService = languageWordService;
     }
 
@@ -46,7 +44,7 @@ public class BrandManager implements BrandService {
                 .map(brand -> modelMapperService.forDto().map(brand, BrandSearchListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccesDataResult<List<BrandSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.BrandListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<BrandSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.BrandListed));
     }
 
     @Override
@@ -60,7 +58,7 @@ public class BrandManager implements BrandService {
         Brand brand = modelMapperService.forRequest().map(createBrandRequest, Brand.class);
         this.brandDao.save(brand);
 
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.BrandAdded,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.BrandAdded));
     }
 
     @Override
@@ -72,7 +70,7 @@ public class BrandManager implements BrandService {
 
         Brand brand = modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
         this.brandDao.save(brand);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.BrandUpdated,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.BrandUpdated));
     }
 
     @Override
@@ -83,13 +81,13 @@ public class BrandManager implements BrandService {
         }
 
         this.brandDao.deleteById(deleteBrandRequest.getBrandId());
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.BrandDeleted,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.BrandDeleted));
     }
 
 
-    private Result checkIfBrandExists(int brandId) {
+    public Result checkIfBrandExists(int brandId) {
         if (!this.brandDao.existsById(brandId)) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.BrandNotFound,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.BrandNotFound));
         }
         return new SuccesResult();
     }
@@ -97,7 +95,7 @@ public class BrandManager implements BrandService {
     private Result checkBrandNameDublicated(String brandName) {
         Brand brand = this.brandDao.getByBrandName(brandName);
         if (brand != null) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.BrandNameDublicated,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.BrandNameDublicated));
         }
 
         return new SuccesResult();

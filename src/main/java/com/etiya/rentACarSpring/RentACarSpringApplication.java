@@ -6,10 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import com.etiya.rentACarSpring.businnes.abstracts.message.LanguageWordService;
+import com.etiya.rentACarSpring.businnes.constants.Messages;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -34,6 +38,9 @@ import javax.persistence.EntityNotFoundException;
 @EnableSwagger2
 @RestControllerAdvice
 public class RentACarSpringApplication {
+
+    @Autowired
+    private LanguageWordService languageWordService;
 
     public static void main(String[] args) {
         SpringApplication.run(RentACarSpringApplication.class, args);
@@ -61,7 +68,8 @@ public class RentACarSpringApplication {
         for (FieldError fieldError : excepiton.getBindingResult().getFieldErrors()) {
             validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
-        ErrorDataResult<Object> error = new ErrorDataResult<Object>(validationErrors, "Validation Error");
+        ErrorDataResult<Object> error = new ErrorDataResult<Object>(validationErrors,
+                this.languageWordService.getByLanguageAndKeyId(Messages.ValidationErrors));
         return error;
     }
 
@@ -69,21 +77,21 @@ public class RentACarSpringApplication {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResult handleNoSuchElementException(NoSuchElementException exception) {
 
-        ErrorResult error = new ErrorResult("Kayıt bulunamadı.");
+        ErrorResult error = new ErrorResult( this.languageWordService.getByLanguageAndKeyId(Messages.NoSuchElementException));
         return error;
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResult handleEntityNotFoundException(EntityNotFoundException exception) {
-        ErrorResult error = new ErrorResult("Böyle bir kayıt bulunmamaktadır.");
+        ErrorResult error = new ErrorResult( this.languageWordService.getByLanguageAndKeyId(Messages.EntityNotFoundException));
         return error;
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResult EmptyResultDataAccessException(EmptyResultDataAccessException exception) {
-        ErrorResult error = new ErrorResult("Böyle bir kayıt bulunmamaktadır.");
+        ErrorResult error = new ErrorResult( this.languageWordService.getByLanguageAndKeyId(Messages.EmptyResultDataAccessException));
         return error;
 
     }
@@ -92,14 +100,14 @@ public class RentACarSpringApplication {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResult EmptyResultDataAccessException(HttpMessageNotReadableException exception) {
-        ErrorResult error = new ErrorResult("Veri girişi yapılırken Json formatında hata oluştu.");
+        ErrorResult error = new ErrorResult( this.languageWordService.getByLanguageAndKeyId(Messages.HttpMessageNotReadableException));
         return error;
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResult DataIntegrityViolationException(DataIntegrityViolationException exception) {
-        ErrorResult error = new ErrorResult("Bu veri başka bir tabloda kullanılmaktadır veya herhangi bir tabloda bulunmamaktadır.");
+        ErrorResult error = new ErrorResult( this.languageWordService.getByLanguageAndKeyId(Messages.DataIntegrityViolationException));
         return error;
     }
 }

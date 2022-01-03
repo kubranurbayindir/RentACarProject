@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateRentalAdditionalServiceRequest {
+    @NotNull
     private int rentalAdditionalServiceId;
     @NotNull
     private int additionalServiceId;

@@ -7,6 +7,7 @@ import com.etiya.rentACarSpring.businnes.dtos.message.LanguageSearchListDto;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.LanguageRequest.CreateLanguageRequest;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.LanguageRequest.DeleteLanguageRequest;
 import com.etiya.rentACarSpring.businnes.request.MessageRequest.LanguageRequest.UpdateLanguageRequest;
+import com.etiya.rentACarSpring.core.utilities.businnessRules.BusinnessRules;
 import com.etiya.rentACarSpring.core.utilities.mapping.ModelMapperService;
 import com.etiya.rentACarSpring.core.utilities.results.*;
 import com.etiya.rentACarSpring.dataAccess.abstracts.message.LanguageDao;
@@ -42,29 +43,36 @@ public class LanguageManager implements LanguageService {
         List<LanguageSearchListDto> response = result.stream()
                 .map(language -> modelMapperService.forDto().map(language, LanguageSearchListDto.class)).collect(Collectors.toList());
 
-        return new SuccesDataResult<List<LanguageSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.LanguageListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<LanguageSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.LanguageListed));
     }
 
     @Override
     public Result save(CreateLanguageRequest createLanguageRequest) {
         Language language = modelMapperService.forRequest().map(createLanguageRequest, Language.class);
         this.languageDao.save(language);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.LanguageAdded,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.LanguageAdded));
 
     }
 
     @Override
     public Result update(UpdateLanguageRequest updateLanguageRequest) {
+        Result result = BusinnessRules.run(checkIfLanguageExists(updateLanguageRequest.getLanguageId()));
+        if (result != null) {
+            return result;
+        }
         Language language = modelMapperService.forRequest().map(updateLanguageRequest, Language.class);
         this.languageDao.save(language);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.LanguageUpdated,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.LanguageUpdated));
     }
 
     @Override
     public Result delete(DeleteLanguageRequest deleteLanguageRequest) {
-
+        Result result = BusinnessRules.run(checkIfLanguageExists(deleteLanguageRequest.getLanguageId()));
+        if (result != null) {
+            return result;
+        }
         this.languageDao.deleteById(deleteLanguageRequest.getLanguageId());
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.LanguageDeleted,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.LanguageDeleted));
     }
 
     public Result checkLanguageExists(int languageId) {
@@ -74,8 +82,14 @@ public class LanguageManager implements LanguageService {
             languageId=1;
             return new SuccesResult();
         } else {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.LanguageNotFound,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.LanguageNotFound));
         }
     }
 
+    public Result checkIfLanguageExists(int languageId) {
+        if (!this.languageDao.existsById(languageId)) {
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.LanguageNotFound));
+        }
+        return new SuccesResult();
+    }
 }

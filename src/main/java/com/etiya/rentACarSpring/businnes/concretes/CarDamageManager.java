@@ -48,7 +48,7 @@ public class CarDamageManager implements CarDamageService {
         List<CarDamageSearchListDto> response = result.stream()
                 .map(car -> modelMapperService.forDto().map(car, CarDamageSearchListDto.class))
                 .collect(Collectors.toList());
-        return new SuccesDataResult<List<CarDamageSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.CarDamageListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<CarDamageSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.CarDamageListed));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class CarDamageManager implements CarDamageService {
 
         CarDamage carDamage = modelMapperService.forRequest().map(createCarDamageRequest, CarDamage.class);
         this.carDamageDao.save(carDamage);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CarDamageAdded,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CarDamageAdded));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class CarDamageManager implements CarDamageService {
 
         CarDamage carDamage = modelMapperService.forRequest().map(updateCarDamageRequest, CarDamage.class);
         this.carDamageDao.save(carDamage);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CarDamageUpdated,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CarDamageUpdated));
     }
 
     @Override
@@ -85,13 +85,13 @@ public class CarDamageManager implements CarDamageService {
         }
 
         this.carDamageDao.deleteById(deleteCarDamageRequest.getCarDamageId());
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CarDamageDeleted,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CarDamageDeleted));
     }
 
     @Override
     public Result checkIfCarDamageIdExists(int carDamageId) {
         if (!this.carDamageDao.existsById(carDamageId)) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CarDamageNotFound,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CarDamageNotFound));
         }
         return new SuccesResult();
     }
@@ -101,6 +101,6 @@ public class CarDamageManager implements CarDamageService {
         if (isExisting) {
             return new SuccesResult();
         }
-        return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CarNotFound,Integer.parseInt(environment.getProperty("language"))));
+        return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CarNotFound));
     }
 }

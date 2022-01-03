@@ -22,5 +22,10 @@ public interface RentalService {
 	Result dropOffCar(DropOffCarRequest dropOffCarRequest);
 	DataResult<Integer> getDailyPriceOfRentedCar(int rentalId);
 	Result checkIfRentalExists(int rentalId);
-	public Result checkReturnDate(int rentalId);
+	Result checkReturnDate(int rentalId);
+	Integer rentOfTotalPrice(DropOffCarRequest dropOffCarRequest);
+	Integer rentOfTotalRentDate(DropOffCarRequest dropOffCarRequest);
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.etiya.rentACarSpring.businnes.abstracts;
 
+import java.sql.Date;
 import java.util.List;
 
 import com.etiya.rentACarSpring.businnes.dtos.InvoiceSearchListDto;
@@ -16,6 +17,7 @@ public interface InvoiceService {
 	Result update(UpdateInvoiceRequest updateInvoiceRequest);
 	Result delete(DeleteInvoiceRequest deleteInvoiceRequest);
 	DataResult<List<InvoiceSearchListDto>> getInvoiceByDate(CreateInvoiceDateRequest createInvoiceDateRequest);
-	Integer rentOfTotalPrice(DropOffCarRequest dropOffCarRequest);
 	Result add(CreateInvoiceRequest createInvoiceRequest);
+	DataResult<Integer> ifCarReturnedToDifferentCity(int rentalId, int returnCityId);
+	int calculateDifferenceBetweenDays(Date maxDate, Date minDate);
 }

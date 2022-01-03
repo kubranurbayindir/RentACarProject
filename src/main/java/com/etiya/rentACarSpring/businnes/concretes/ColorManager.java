@@ -48,7 +48,7 @@ public class ColorManager implements ColorService {
                 .map(color -> modelMapperService.forDto().map(color, ColorSearchListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccesDataResult<List<ColorSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.ColorListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<ColorSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.ColorListed));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ColorManager implements ColorService {
         }
         Color color = modelMapperService.forRequest().map(createColorRequest, Color.class);
         this.colorDao.save(color);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.ColorAdded,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.ColorAdded));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ColorManager implements ColorService {
         }
         Color color = modelMapperService.forRequest().map(updateColorRequest, Color.class);
         this.colorDao.save(color);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.ColorUpdated,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.ColorUpdated));
     }
 
     @Override
@@ -85,13 +85,13 @@ public class ColorManager implements ColorService {
             return result;
         }
         this.colorDao.deleteById(deleteColorRequest.getColorId());
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.ColorDeleted,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.ColorDeleted));
     }
 
     @Override
     public Result checkIfColorExists(int colorId) {
         if (!this.colorDao.existsById(colorId)) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.ColorNotFound,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.ColorNotFound));
         }
         return new SuccesResult();
     }
@@ -99,7 +99,7 @@ public class ColorManager implements ColorService {
     private Result checkColorNameDuplicated(String colorName) {
         Color color = this.colorDao.getColorByColorName(colorName);
         if (color != null) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.ColorNameDuplicated,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.ColorNameDuplicated));
         }
         return new SuccesResult();
     }

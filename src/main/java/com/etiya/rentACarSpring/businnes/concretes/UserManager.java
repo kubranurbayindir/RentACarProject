@@ -49,33 +49,33 @@ public class UserManager implements UserService {
                 .map(user -> modelMapperService.forDto().map(user, UserSearchListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccesDataResult<List<UserSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.UserListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<UserSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.UserListed));
     }
 
     @Override
     public Result add(CreateUserRequest createUserRequest) {
         User user = modelMapperService.forRequest().map(createUserRequest, User.class);
         this.userDao.save(user);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.UserAdded,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.UserAdded));
     }
 
     @Override
     public Result update(UpdateUserRequest updateUserRequest) {
         User user = modelMapperService.forRequest().map(updateUserRequest, User.class);
         this.userDao.save(user);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.UserUpdated,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.UserUpdated));
     }
 
     @Override
     public Result delete(DeleteUserRequest deleteUserRequest) {
         this.userDao.deleteById(deleteUserRequest.getUserId());
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.UserDeleted,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.UserDeleted));
     }
 
     @Override
     public Result existByEmail(String email) {
         if (this.userDao.existsByEmail(email)) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.MailNotValid,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.MailNotValid));
         }
         return new SuccesResult();
     }
@@ -98,4 +98,10 @@ public class UserManager implements UserService {
         return userDao.getById(userId);
     }
 
+    public Result existByUserId (int userId) {
+        if (!this.userDao.existsById(userId)){
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.UserNotExist));
+        }
+        return new SuccesResult();
+    }
 }

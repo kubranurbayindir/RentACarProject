@@ -65,7 +65,7 @@ public class AuthManager implements AuthService {
         crateCreateIndividualCustomerRequest.setFindexScore(findexScoreService.getIndividualFindexScore(individualRegisterRequest.getIdentityNumber()));
         this.individualCustomerService.save(crateCreateIndividualCustomerRequest);
 
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.IndividualCustomerRegisterSuccessful,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.IndividualCustomerRegisterSuccessful));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class AuthManager implements AuthService {
                 CreateCorparateRequest.class);
         createCorparateRequest.setFindexScore(findexScoreService.getCorparateFindexScore(corparateRegisterRequest.getTaxNumber()));
         this.corparateCustomerService.add(createCorparateRequest);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CorporateCustomerRegisterSuccessful,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CorporateCustomerRegisterSuccessful));
     }
 
     @Override
@@ -90,13 +90,13 @@ public class AuthManager implements AuthService {
             return result;
         }
 
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.LoginSuccessful,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.LoginSuccessful));
     }
 
     @Override
     public Result checkCustomerEmailIsTrue(LoginRequest loginRequest) {
         if (this.userService.existByEmail(loginRequest.getEmail()).isSuccess()) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.MailNotValid,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.MailNotValid));
         }
         return new SuccesResult();
     }
@@ -107,7 +107,7 @@ public class AuthManager implements AuthService {
 
             if (!this.userService.getByEmail(loginRequest.getEmail()).getData().getPassword()
                     .equals(loginRequest.getPassword())) {
-                return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.PasswordWrong,Integer.parseInt(environment.getProperty("language"))));
+                return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.PasswordWrong));
             }
         }
         return new SuccesResult();
@@ -115,7 +115,7 @@ public class AuthManager implements AuthService {
 
     public Result checkEmailIfExists(String email) {
         if (!this.userService.existByEmail(email).isSuccess()) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.MailAlreadyExists,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.MailAlreadyExists));
         }
         return new SuccesResult();
     }

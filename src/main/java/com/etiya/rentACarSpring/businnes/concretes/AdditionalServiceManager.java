@@ -50,7 +50,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
         AdditionalService additionalService = modelMapperService.forRequest().map(createAdditionalServiceRequest, AdditionalService.class);
         this.additionalServiceDao.save(additionalService);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceAdded,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceAdded));
 
     }
 
@@ -64,7 +64,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
         AdditionalService additionalService = modelMapperService.forRequest().map(updateAdditionalServiceRequest, AdditionalService.class);
         this.additionalServiceDao.save(additionalService);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceUpdated,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceUpdated));
 
 
     }
@@ -78,7 +78,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
         }
 
         this.additionalServiceDao.deleteById(deleteAdditionalServiceRequest.getAdditionalServiceId());
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceDeleted,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceDeleted));
 
     }
 
@@ -88,13 +88,13 @@ public class AdditionalServiceManager implements AdditionalServiceService {
         List<AdditionalServiceSearchListDto> response = result.stream()
                 .map(additionalService -> modelMapperService.forDto().map(additionalService, AdditionalServiceSearchListDto.class))
                 .collect(Collectors.toList());
-        return new SuccesDataResult<List<AdditionalServiceSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<AdditionalServiceSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceListed));
     }
 
     private Result checkAdditionalServiceNameDublicated(String additionalServiceName) {
         AdditionalService additionalService = this.additionalServiceDao.getByAdditionalServiceName(additionalServiceName.toLowerCase());
         if (additionalService != null) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceDublicated,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceDublicated));
 
         }
         return new SuccesResult();
@@ -103,7 +103,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
     public Result checkIfAdditionalServicexists(int additionalServiceId) {
         if (!this.additionalServiceDao.existsById(additionalServiceId)) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceNotFound,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.AdditionalServiceNotFound));
 
         }
         return new SuccesResult();

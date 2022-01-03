@@ -19,4 +19,5 @@ public interface UserService {
 	DataResult<User> getById(int userId);
 	DataResult<User> getByEmail(String email);
 	User getByUserId(int userId);
+	Result existByUserId (int userId);
 }

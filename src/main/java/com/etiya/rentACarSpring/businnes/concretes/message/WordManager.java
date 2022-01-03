@@ -45,7 +45,7 @@ public class WordManager implements WordService {
                 .map(word -> modelMapperService.forDto().map(word, WordSearchListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccesDataResult<List<WordSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.WordListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<WordSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.WordListed));
     }
 
     @Override
@@ -56,20 +56,28 @@ public class WordManager implements WordService {
         }
         Word word = modelMapperService.forRequest().map(createWordRequest, Word.class);
         this.wordDao.save(word);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.WordAdded,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.WordAdded));
     }
 
     @Override
     public Result update(UpdateWordRequest updateWordRequest) {
+        Result result = BusinnessRules.run(checkIfWordExists(updateWordRequest.getWordId()));
+        if (result != null) {
+            return result;
+        }
         Word word = modelMapperService.forRequest().map(updateWordRequest, Word.class);
         this.wordDao.save(word);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.WordUpdated,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.WordUpdated));
     }
 
     @Override
     public Result delete(DeleteWordRequest deleteWordRequest) {
+        Result result = BusinnessRules.run(checkIfWordExists(deleteWordRequest.getWordId()));
+        if (result != null) {
+            return result;
+        }
         this.wordDao.deleteById(deleteWordRequest.getWordId());
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.WordDeleted,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.WordDeleted));
     }
 
     @Override
@@ -77,7 +85,7 @@ public class WordManager implements WordService {
         if (this.wordDao.existsById(wordId)) {
             return new SuccesResult();
         }
-        return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.WordNotFound,Integer.parseInt(environment.getProperty("language"))));
+        return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.WordNotFound));
     }
 
     @Override
@@ -86,13 +94,20 @@ public class WordManager implements WordService {
         if (word != null) {
             return new SuccesResult();
         }
-        return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.KeyAlreadyExist,Integer.parseInt(environment.getProperty("language"))));
+        return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.KeyAlreadyExist));
     }
 
     private Result ifKeyDuplicated(String key){
         Word word = this.wordDao.getByKey(key);
         if (word != null){
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.KeyDuplicated,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.KeyDuplicated));
+        }
+        return new SuccesResult();
+    }
+
+    public Result checkIfWordExists(int wordId) {
+        if (!this.wordDao.existsById(wordId)) {
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.WordNotFound));
         }
         return new SuccesResult();
     }

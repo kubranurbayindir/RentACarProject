@@ -4,11 +4,9 @@ import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ch.qos.logback.core.CoreConstants;
 import com.etiya.rentACarSpring.businnes.abstracts.*;
 import com.etiya.rentACarSpring.businnes.abstracts.message.LanguageWordService;
 import com.etiya.rentACarSpring.businnes.request.InvoiceRequest.CreateInvoiceRequest;
-import com.etiya.rentACarSpring.businnes.request.RentalRequest.DropOffCarRequest;
 import com.etiya.rentACarSpring.core.utilities.businnessRules.BusinnessRules;
 import com.etiya.rentACarSpring.core.utilities.results.*;
 import com.etiya.rentACarSpring.entities.Car;
@@ -60,13 +58,14 @@ public class InvoiceManager implements InvoiceService {
                 .map(invoice -> modelMapperService.forDto().map(invoice, InvoiceSearchListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccesDataResult<List<InvoiceSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.InvoiceListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<InvoiceSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.InvoiceListed));
     }
 
 
     @Override
     public Result add(CreateInvoiceRequest createInvoiceRequest) {
-        Result rules = BusinnessRules.run(ifExistRentalIdOnInvoice(createInvoiceRequest.getRentalId())
+        Result rules = BusinnessRules.run(ifExistRentalIdOnInvoice(createInvoiceRequest.getRentalId()),
+                isReturnDateNull(createInvoiceRequest.getRentalId())
         );
         if (rules != null) {
             return rules;
@@ -79,7 +78,11 @@ public class InvoiceManager implements InvoiceService {
 
         Date rentDateForInvoice = (Date) (rentalService.getById(createInvoiceRequest.getRentalId()).getRentDate());
         int totalRentDay = calculateDifferenceBetweenDays(rentalService.getById(createInvoiceRequest.getRentalId()).getReturnDate(), rentDateForInvoice);
+        if (totalRentDay == 0) {
+            totalRentDay = 1;
+        }
         createInvoiceRequest.setTotalRentDay(totalRentDay);
+
         int additionalTotalAmount = rentalService.sumAdditionalServicePriceByRentalId(rental.getRentalId());
         int priceOfReturnDifferentCity = ifCarReturnedToDifferentCity(createInvoiceRequest.getRentalId(), createInvoiceRequest.getReturnCityId()).getData();
         int totalAmount = (car.getDailyPrice() * totalRentDay) + priceOfReturnDifferentCity + additionalTotalAmount;
@@ -93,21 +96,32 @@ public class InvoiceManager implements InvoiceService {
 
         Invoice invoice = modelMapperService.forRequest().map(createInvoiceRequest, Invoice.class);
         this.invoiceDao.save(invoice);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.InvoiceAdded,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.InvoiceAdded));
     }
-    
+
+
+
     @Override
     public Result update(UpdateInvoiceRequest updateInvoiceRequest) {
-
+        Result rules = BusinnessRules.run( checkIfInvoiceExists(updateInvoiceRequest.getInvoiceId())
+        );
+        if (rules != null) {
+            return rules;
+        }
         Invoice invoice = modelMapperService.forRequest().map(updateInvoiceRequest, Invoice.class);
         this.invoiceDao.save(invoice);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.InvoiceUpdated,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.InvoiceUpdated));
     }
 
     @Override
     public Result delete(DeleteInvoiceRequest deleteInvoiceRequest) {
+        Result rules = BusinnessRules.run( checkIfInvoiceExists(deleteInvoiceRequest.getInvoiceId())
+        );
+        if (rules != null) {
+            return rules;
+        }
         this.invoiceDao.deleteById(deleteInvoiceRequest.getInvoiceId());
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.InvoiceDeleted,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.InvoiceDeleted));
 
     }
 
@@ -121,19 +135,19 @@ public class InvoiceManager implements InvoiceService {
                 .map(invoice -> modelMapperService.forDto().map(invoice, InvoiceSearchListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccesDataResult<List<InvoiceSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.InvoiceByDateListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<InvoiceSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.InvoiceByDateListed));
     }
 
-    private int calculateDifferenceBetweenDays(Date maxDate, Date minDate) {
+    public int calculateDifferenceBetweenDays(Date maxDate, Date minDate) {
         long difference = (maxDate.getTime() - minDate.getTime()) / 86400000;
         return Math.abs((int) difference);
 
     }
 
-    private DataResult<Integer> ifCarReturnedToDifferentCity(int rentalId, int returnCityId) {
-        if (this.rentalService.getById(rentalId).getTakeCity() != this.cityService.getById(returnCityId).getData())
-            return new SuccesDataResult<>(500);
-        return new SuccesDataResult<>(0);
+    public DataResult<Integer> ifCarReturnedToDifferentCity(int rentalId, int returnCityId) {
+        if (this.rentalService.getById(rentalId).getTakeCity().equals(this.rentalService.getById(rentalId).getReturnCity())){
+            return new SuccesDataResult<>(0);}
+        return new ErrorDataResult<>(500);
     }
 
     private DataResult<String> createInvoiceNumber(int rentalId) {
@@ -146,28 +160,27 @@ public class InvoiceManager implements InvoiceService {
         return new SuccesDataResult<>(invoiceNumber);
     }
 
-    public Integer rentOfTotalPrice(DropOffCarRequest dropOffCarRequest) {
 
-        int dailyPriceOfCar = this.rentalService.getDailyPriceOfRentedCar(dropOffCarRequest.getRentalId()).getData();
-        int priceOfDiffrentCity = ifCarReturnedToDifferentCity(dropOffCarRequest.getRentalId(), dropOffCarRequest.getReturnCityId()).getData();
-        int addtionalServicePrice = rentalService.sumAdditionalServicePriceByRentalId(dropOffCarRequest.getRentalId()) * rentOfTotalRentDate(dropOffCarRequest);
-        int totalPrice = (rentOfTotalRentDate(dropOffCarRequest) * dailyPriceOfCar) + priceOfDiffrentCity + addtionalServicePrice;
-        return totalPrice;
-    }
-
-    private Integer rentOfTotalRentDate(DropOffCarRequest dropOffCarRequest) {
-        Date rentDateForInvoice = (Date) (rentalService.getById(dropOffCarRequest.getRentalId()).getRentDate());
-        int totalRentDay = calculateDifferenceBetweenDays(dropOffCarRequest.getReturnDate(), rentDateForInvoice);
-        if (totalRentDay == 0) { // bir günden az kullansa bari bir günlük ücret.
-            totalRentDay = 1;
-        }
-        return totalRentDay;
-    }
 
     private Result ifExistRentalIdOnInvoice(int rentalId) {
         Integer result = this.invoiceDao.countByRental_RentalId(rentalId);
         if (result > 0) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.InvoiceAlreadyExistForThisRent,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.InvoiceAlreadyExistForThisRent));
+        }
+        return new SuccesResult();
+    }
+
+    private Result isReturnDateNull(int rentalId){
+        Rental result = this.rentalService.getById(rentalId);
+        if (result.getReturnDate() == null){
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.RentalNotCompleted));
+        }
+        return new SuccesResult();
+    }
+
+    private Result checkIfInvoiceExists(int invoiceId) {
+        if (!this.invoiceDao.existsById(invoiceId)) {
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.InvoiceNotFound));
         }
         return new SuccesResult();
     }

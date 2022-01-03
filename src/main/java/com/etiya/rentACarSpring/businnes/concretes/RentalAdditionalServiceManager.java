@@ -51,7 +51,7 @@ public class RentalAdditionalServiceManager implements RentalAdditionalServiceSe
         List<RentalAdditionalServiceSearchListDto> response = result.stream()
                 .map(rentalAdditionalService -> modelMapperService.forDto().map(rentalAdditionalService, RentalAdditionalServiceSearchListDto.class))
                 .collect(Collectors.toList());
-        return new SuccesDataResult<List<RentalAdditionalServiceSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.RentalAdditionalServiceListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<RentalAdditionalServiceSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.RentalAdditionalServiceListed));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class RentalAdditionalServiceManager implements RentalAdditionalServiceSe
 
         RentalAdditionalService rentalAdditionalService = modelMapperService.forRequest().map(createRentalAdditionalServiceRequest, RentalAdditionalService.class);
         this.rentalAdditionalServiceDao.save(rentalAdditionalService);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.RentalAdditionalServiceAdded,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.RentalAdditionalServiceAdded));
     }
 
     @Override
@@ -82,8 +82,9 @@ public class RentalAdditionalServiceManager implements RentalAdditionalServiceSe
             return result;
         }
         RentalAdditionalService rentalAdditionalService = modelMapperService.forRequest().map(updateRentalAdditionalServiceRequest, RentalAdditionalService.class);
+        
         this.rentalAdditionalServiceDao.save(rentalAdditionalService);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.RentalAdditionalServiceUpdated,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.RentalAdditionalServiceUpdated));
     }
 
     @Override
@@ -94,15 +95,15 @@ public class RentalAdditionalServiceManager implements RentalAdditionalServiceSe
             return result;
         }
         this.rentalAdditionalServiceDao.deleteById(deleteRentalAdditionalServiceRequest.getRentalAdditionalServiceId());
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.RentalAdditionalServiceDeleted,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.RentalAdditionalServiceDeleted));
     }
 
 
     private Result checkIfRentalAdditionalExists(int rentalAdditionalId) {
         if (!this.rentalAdditionalServiceDao.existsById(rentalAdditionalId)) {
-            return new ErrorResult();
+            return new ErrorResult(Messages.RentalAdditionalServiceNotFound);
         }
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.RentalAdditionalServiceNotFound,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult();
 
     }
 }

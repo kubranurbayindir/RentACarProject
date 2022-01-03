@@ -30,16 +30,14 @@ import com.etiya.rentACarSpring.entities.CreditCard;
 public class CreditCardManager implements CreditCardService {
     private CreditCardDao creditCardDao;
     private ModelMapperService modelMapperService;
-    private Environment environment;
     private LanguageWordService languageWordService;
 
     @Autowired
-    public CreditCardManager(CreditCardDao creditCardDao, ModelMapperService modelMapperService, Environment environment,
+    public CreditCardManager(CreditCardDao creditCardDao, ModelMapperService modelMapperService,
                              LanguageWordService languageWordService) {
         super();
         this.creditCardDao = creditCardDao;
         this.modelMapperService = modelMapperService;
-        this.environment = environment;
         this.languageWordService = languageWordService;
     }
 
@@ -49,7 +47,7 @@ public class CreditCardManager implements CreditCardService {
         List<CreditCardSearchListDto> response = result.stream()
                 .map(creditCard -> modelMapperService.forDto().map(creditCard, CreditCardSearchListDto.class))
                 .collect(Collectors.toList());
-        return new SuccesDataResult<List<CreditCardSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.CreditCardListed,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesDataResult<List<CreditCardSearchListDto>>(response, languageWordService.getByLanguageAndKeyId(Messages.CreditCardListed));
     }
 
     @Override
@@ -62,26 +60,31 @@ public class CreditCardManager implements CreditCardService {
         }
         CreditCard creditCard = modelMapperService.forRequest().map(createCreditCardRequest, CreditCard.class);
         this.creditCardDao.save(creditCard);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CreditCardAdded,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CreditCardAdded));
     }
 
     @Override
     public Result update(UpdateCreditCardRequest updateCreditCardRequest) {
         Result result = BusinnessRules.run(checkIfCreditCardFormatIsTrue(updateCreditCardRequest.getCardNumber()),
-                checkIfCreditCardCvvFormatIsTrue(updateCreditCardRequest.getCvv()));
+                checkIfCreditCardCvvFormatIsTrue(updateCreditCardRequest.getCvv()),
+                checkIfCardExists(updateCreditCardRequest.getCreditCardId()));
         if (result != null) {
             return result;
         }
 
         CreditCard creditCard = modelMapperService.forRequest().map(updateCreditCardRequest, CreditCard.class);
         this.creditCardDao.save(creditCard);
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CreditCardUpdated,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CreditCardUpdated));
     }
 
     @Override
     public Result delete(DeleteCreditCardRequest deleteCreditCardRequest) {
+        Result result = BusinnessRules.run(checkIfCardExists(deleteCreditCardRequest.getCreditCardId()));
+        if (result != null) {
+            return result;
+        }
         this.creditCardDao.deleteById(deleteCreditCardRequest.getCreditCardId());
-        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CreditCardDeleted,Integer.parseInt(environment.getProperty("language"))));
+        return new SuccesResult(languageWordService.getByLanguageAndKeyId(Messages.CreditCardDeleted));
     }
 
     public Result checkIfCreditCardFormatIsTrue(String cardNumber) {
@@ -93,7 +96,7 @@ public class CreditCardManager implements CreditCardService {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(cardNumber);
         if (!matcher.find()) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CreditCardFormatIsNotCorrect,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CreditCardFormatIsNotCorrect));
         }
 
         return new SuccesResult();
@@ -103,7 +106,7 @@ public class CreditCardManager implements CreditCardService {
     private Result checkExistCardNumber(String cardNumber) {
 
         if (this.creditCardDao.existsByCardNumber(cardNumber)) {
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CreditCardAlreadyExist,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CreditCardAlreadyExist));
         }
         return new SuccesResult();
     }
@@ -117,8 +120,15 @@ public class CreditCardManager implements CreditCardService {
         Matcher matcher = pattern.matcher(cvv);
 
         if (!matcher.matches())
-            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CvvFormatIsNotCorrect,Integer.parseInt(environment.getProperty("language"))));
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CvvFormatIsNotCorrect));
 
+        return new SuccesResult();
+    }
+
+    private Result checkIfCardExists(int creditCardId) {
+        if (!this.creditCardDao.existsById(creditCardId)) {
+            return new ErrorResult(languageWordService.getByLanguageAndKeyId(Messages.CreditCardNotFound));
+        }
         return new SuccesResult();
     }
 }
