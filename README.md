@@ -11,4 +11,3 @@ Dependencies: <br>
 
 <b><h2>	⚡ <a href="https://etiya-rent-a-car-pair-6.herokuapp.com/swagger-ui.html">Click </a>to test it on the live server. </h2></b>
 
-
